@@ -151,6 +151,8 @@ EMBEDDING_DIMENSION=1024
 
 DATABASE_URL=mysql+aiomysql://<user>:<password>@<mysql-host>:3306/<database>?charset=utf8mb4
 REDIS_URL=redis://:<password>@<redis-host>:6379/0
+REQUEST_LOCK_ENABLED=true
+REQUEST_LOCK_TTL_SECONDS=120
 
 VECTOR_STORE_PROVIDER=qdrant
 QDRANT_URL=https://qdrant.example.com
@@ -184,6 +186,16 @@ OTEL_ENABLED=true
 OTEL_EXPORTER_OTLP_ENDPOINT=https://<otel-collector-host>:4318
 ```
 
+客户端重试同一轮请求时，应携带同一个 `Idempotency-Key` 请求头。服务会按租户和用户隔离该键，并复用已经落库的响应：
+
+```bash
+curl -X POST "https://<agent-host>/api/v1/chat" \
+  -H "Authorization: Bearer <access-token>" \
+  -H "Idempotency-Key: <client-generated-request-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"tenant_id":"ignored-by-server","user_id":"ignored-by-server","question":"我的订单到哪里了？"}'
+```
+
 ## 部署说明
 
 主服务可以作为 FastAPI 应用部署，并依赖以下独立基础设施和业务服务：
@@ -200,12 +212,15 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://<otel-collector-host>:4318
 
 ```bash
 python scripts/check_env.py
-python scripts/init_db.py
+# 生产环境使用 Alembic 管理数据库版本
+alembic upgrade head
 python scripts/seed_sample_data.py
 python scripts/ingest_docs.py knowledge_base --tenant-id <tenant-id>
 python scripts/run_after_sales_mcp_server.py
 uvicorn customer_service_app.main:app --host 0.0.0.0 --port <port>
 ```
+
+`python scripts/init_db.py` 只适合本地全新数据库的快速初始化，不替代生产迁移。
 
 知识目录需要作为租户完整数据源进行对账时，显式开启缺失文档清理：
 

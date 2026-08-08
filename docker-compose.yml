@@ -112,6 +112,8 @@ services:
       SEMANTIC_CACHE_ENABLED: ${SEMANTIC_CACHE_ENABLED:-false}
       DATABASE_URL: ${DATABASE_URL:-mysql+aiomysql://customer_service:customer_service@mysql:3306/customer_service?charset=utf8mb4}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      REQUEST_LOCK_ENABLED: ${REQUEST_LOCK_ENABLED:-true}
+      REQUEST_LOCK_TTL_SECONDS: ${REQUEST_LOCK_TTL_SECONDS:-120}
       VECTOR_STORE_PROVIDER: ${VECTOR_STORE_PROVIDER:-qdrant}
       QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
       QDRANT_API_KEY: ${QDRANT_API_KEY:-}

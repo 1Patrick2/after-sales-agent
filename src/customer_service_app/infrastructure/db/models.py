@@ -331,6 +331,16 @@ class AgentRun(Base):
     total_tokens: Mapped[int] = mapped_column(Integer, default=0)
     error_code: Mapped[str | None] = mapped_column(String(64), nullable=True)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    response_json: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "user_id",
+            "request_id",
+            name="uq_agent_run_idempotency_owner_key",
+        ),
+    )
 
 
 class AgentRunStep(Base):

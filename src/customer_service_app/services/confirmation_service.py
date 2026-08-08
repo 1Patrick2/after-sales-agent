@@ -126,7 +126,28 @@ class ConfirmationService:
 
         self._ensure_pending_and_not_expired(action)
 
-        await self._repo.mark_approved(action)
+        if self._tool_registry is None or self._business_gateway is None:
+            raise AppError(
+                "Confirmation executor is not configured",
+                code="confirmation_executor_unavailable",
+                status_code=503,
+            )
+
+        now = datetime.now(timezone.utc)
+        claimed = await self._repo.claim_for_approval(
+            tenant_id=tenant_id,
+            user_id=user_id,
+            action_id=action_id,
+            now=now,
+        )
+        if not claimed:
+            raise AppError(
+                "Confirmation is already being processed",
+                code="confirmation_already_processed",
+                status_code=409,
+            )
+        # 条件 UPDATE 已经完成状态迁移；刷新 ORM 对象，后续失败/成功状态更新基于最新值。
+        await self._session.refresh(action)
 
         approval_token: str | None = None
         if self._settings.mcp_after_sales_enabled:
@@ -138,12 +159,6 @@ class ConfirmationService:
                 tool_name=action.tool_name,
             )
 
-        if self._tool_registry is None or self._business_gateway is None:
-            raise AppError(
-                "Confirmation executor is not configured",
-                code="confirmation_executor_unavailable",
-                status_code=503,
-            )
         context = ToolExecutionContext(
             tenant_id=tenant_id,
             user_id=user_id,

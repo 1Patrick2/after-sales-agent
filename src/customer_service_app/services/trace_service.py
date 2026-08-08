@@ -58,6 +58,24 @@ class TraceService:
         """按 id 读取 run，供 Graph 节点恢复或结束时使用。"""
         return await self._repo.get_run(run_id=run_id)
 
+    async def get_idempotent_response(
+        self,
+        *,
+        tenant_id: str,
+        user_id: str,
+        request_id: str,
+    ) -> dict[str, Any] | None:
+        """读取客户端重试对应的已落库响应。"""
+        return await self._repo.get_idempotent_response(
+            tenant_id=tenant_id,
+            user_id=user_id,
+            request_id=request_id,
+        )
+
+    async def save_response(self, *, run_id: str, response: dict[str, Any]) -> None:
+        """把最终响应写入 AgentRun，供相同幂等键直接复用。"""
+        await self._repo.save_response(run_id=run_id, response=response)
+
     async def finish_success(
         self,
         *,

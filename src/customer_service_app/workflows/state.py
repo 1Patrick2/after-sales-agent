@@ -48,6 +48,7 @@ class CustomerServiceGraphState(TypedDict, total=False):
 
     tool_calls: list[dict[str, Any]]
     tool_cursor: int
+    tool_call_count: int
     tool_results: list[dict[str, Any]]
 
     active_tool_name: str

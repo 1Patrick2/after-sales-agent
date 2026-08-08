@@ -47,6 +47,8 @@ class Settings(BaseSettings):
     redis_url: str = ""
     semantic_cache_ttl_seconds: int = 3600
     semantic_cache_threshold: float = 0.90
+    request_lock_enabled: bool = False
+    request_lock_ttl_seconds: int = 120
 
     semantic_rewrite_enabled: bool = True
     semantic_rewrite_min_confidence: float = 0.55

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date, datetime, timezone
 from typing import Any
 
-from sqlalchemy import case, delete, or_, select
+from sqlalchemy import case, delete, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import StaleDataError
 
@@ -76,7 +76,12 @@ class ConversationRepository:
 
     async def recent_messages(self, *, conversation_id: str, limit: int = 12) -> list[Message]:
         """按时间倒序查最近消息，再反转成正常阅读顺序。"""
-        statement = select(Message).where(Message.conversation_id == conversation_id).limit(limit).order_by(Message.created_at.desc())
+        statement = (
+            select(Message)
+            .where(Message.conversation_id == conversation_id)
+            .order_by(Message.created_at.desc())
+            .limit(limit)
+        )
         result = await self._session.execute(statement)
         rows = list(result.scalars().all())
         return list(reversed(rows))
@@ -353,6 +358,35 @@ class PendingActionRepository:
         action.approved_at = datetime.now(timezone.utc)
         await self._session.flush()
 
+    async def claim_for_approval(
+        self,
+        *,
+        tenant_id: str,
+        user_id: str,
+        action_id: str,
+        now: datetime,
+    ) -> bool:
+        """Atomically claim one pending action for execution.
+
+        查询后再修改会产生竞态：两个请求都可能先读到 ``pending``，随后各自执行一次
+        外部副作用。这里用带状态条件的 UPDATE，让数据库只允许一个请求把动作从
+        ``pending`` 改为 ``approved``；受影响行数为 0 的请求必须停止执行。
+        """
+        statement = (
+            update(PendingAction)
+            .where(
+                PendingAction.id == action_id,
+                PendingAction.tenant_id == tenant_id,
+                PendingAction.user_id == user_id,
+                PendingAction.status == "pending",
+                or_(PendingAction.expire_at.is_(None), PendingAction.expire_at > now),
+            )
+            .values(status="approved", approved_at=now)
+        )
+        result = await self._session.execute(statement)
+        await self._session.flush()
+        return int(result.rowcount or 0) == 1
+
     async def mark_expired(self, action: PendingAction) -> None:
         """Mark an expired confirmation so it cannot be resumed later."""
         action.status = 'expired'
@@ -560,7 +594,7 @@ class MemoryRepository:
             })
         ).where(
             or_(CustomerMemory.expires_at.is_(None), CustomerMemory.expires_at > datetime.now(timezone.utc))
-        ).limit(limit).order_by(CustomerMemory.updated_at.desc())
+        ).order_by(CustomerMemory.updated_at.desc()).limit(limit)
         result = await self._session.execute(state)
         return list(result.scalars().all())
 
@@ -759,6 +793,47 @@ class AgentRunRepository:
         run.error_message = error_message
         run.ended_at = datetime.now(timezone.utc)
         run.latency_ms = latency_ms
+        await self._session.flush()
+
+    async def get_idempotent_response(
+        self,
+        *,
+        tenant_id: str,
+        user_id: str,
+        request_id: str,
+    ) -> dict[str, Any] | None:
+        """Return a previously persisted response for a client retry.
+
+        ``request_id`` is supplied by the client as ``Idempotency-Key``. It is deliberately
+        scoped by tenant and user, so one customer cannot replay another customer's response.
+        """
+        if not request_id:
+            return None
+        statement = (
+            select(AgentRun)
+            .where(
+                AgentRun.tenant_id == tenant_id,
+                AgentRun.user_id == user_id,
+                AgentRun.request_id == request_id,
+                AgentRun.status.in_(
+                    {"success", "waiting_confirmation", "completed", "needs_clarification"}
+                ),
+            )
+            .order_by(AgentRun.started_at.desc())
+            .limit(1)
+        )
+        result = await self._session.execute(statement)
+        run = result.scalars().one_or_none()
+        if run is None or not run.response_json:
+            return None
+        return dict(run.response_json)
+
+    async def save_response(self, *, run_id: str, response: dict[str, Any]) -> None:
+        """Persist the serialized API response used by idempotent retries."""
+        run = await self.get_run(run_id=run_id)
+        if run is None:
+            return
+        run.response_json = response
         await self._session.flush()
 
     async def get_run(self, *, run_id: str) -> AgentRun | None:

@@ -38,9 +38,16 @@ class PlannerService:
 
     _condition_words = ("如果", "不行", "不能", "然后", "同时", "再", "并且", "否则")
 
-    def __init__(self, *, tool_registry: ToolRegistry, max_steps: int = 6):
+    def __init__(
+        self,
+        *,
+        tool_registry: ToolRegistry,
+        max_steps: int = 6,
+        max_llm_calls: int = 2,
+    ):
         self._tool_registry = tool_registry
         self._max_steps = max_steps
+        self._max_llm_calls = max(int(max_llm_calls), 1)
 
     def needs_plan(self, request: ChatRequest, *, resolved_question: str | None = None) -> bool:
         """Use a zero-token gate so simple questions never pay planner cost."""
@@ -206,7 +213,7 @@ class PlannerService:
         prompt_tokens = 0
         completion_tokens = 0
         total_tokens = 0
-        for attempt in range(2):
+        for attempt in range(self._max_llm_calls):
             prompt_tokens += response.prompt_tokens
             completion_tokens += response.completion_tokens
             total_tokens += response.total_tokens
@@ -233,7 +240,7 @@ class PlannerService:
                 ValueError,
             ) as exc:
                 validation_error = str(exc)
-                if attempt == 1:
+                if attempt + 1 >= self._max_llm_calls:
                     break
                 repair_messages = [
                     *messages,

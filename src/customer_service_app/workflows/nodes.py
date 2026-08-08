@@ -131,7 +131,14 @@ class CustomerServiceGraphNodes:
             tenant_id=request.tenant_id,
             user_id=request.user_id,
             conversation_id=conversation.id,
-            request_id=str(request.metadata.get("request_id") or "") or None,
+            request_id=(
+                str(
+                    request.metadata.get("idempotency_key")
+                    or request.metadata.get("request_id")
+                    or ""
+                )
+                or None
+            ),
         )
 
         strategy = await self._cost_service.choose_strategy(tenant_id=request.tenant_id)
@@ -190,6 +197,7 @@ class CustomerServiceGraphNodes:
             "first_response": {},
             "tool_calls": [],
             "tool_cursor": 0,
+            "tool_call_count": 0,
             "tool_results": [],
             "active_tool_name": "",
             "active_arguments": {},
@@ -476,6 +484,8 @@ class CustomerServiceGraphNodes:
             ).model_dump(mode="json")
             for call in response.tool_calls
         ]
+        if tool_calls:
+            self._ensure_tool_budget(state, additional=len(tool_calls))
         trace = self._append_trace(
             state,
             ChatTraceStep(
@@ -565,6 +575,7 @@ class CustomerServiceGraphNodes:
             and len(parallel_ready) > 1
         ):
             wave = parallel_ready[: max(self._settings.plan_max_parallel_steps, 1)]
+            self._ensure_tool_budget(state, additional=len(wave))
             observations = await asyncio.gather(
                 *(self._execute_parallel_plan_tool(step) for step in wave)
             )
@@ -599,6 +610,7 @@ class CustomerServiceGraphNodes:
                         *state.get("plan_observations", []),
                         *observations,
                     ],
+                    "tool_call_count": int(state.get("tool_call_count", 0)) + len(wave),
                     "executed_plan_steps": sorted(executed),
                     "trace": trace,
                 },
@@ -615,6 +627,9 @@ class CustomerServiceGraphNodes:
             ready[0],
         )
         cursor = len(executed)
+
+        if step.tool_name:
+            self._ensure_tool_budget(state)
 
         if step.tool_name and (step.requires_confirmation or step.action_type in {"confirm", "handoff"}):
             return Command(
@@ -700,6 +715,8 @@ class CustomerServiceGraphNodes:
                     *state.get("plan_observations", []),
                     observation,
                 ],
+                "tool_call_count": int(state.get("tool_call_count", 0))
+                + (1 if step.tool_name else 0),
                 "executed_plan_steps": [
                     *state.get("executed_plan_steps", []),
                     step.step_id,
@@ -742,6 +759,7 @@ class CustomerServiceGraphNodes:
         call = calls[cursor]
         tool = self._tool_registry.require(str(call["name"]))
         arguments = cast(dict[str, Any], call.get("arguments") or {})
+        self._ensure_tool_budget(state)
 
         if tool.requires_confirmation:
             return Command(
@@ -789,6 +807,7 @@ class CustomerServiceGraphNodes:
         return Command(
             update={
                 "tool_cursor": cursor + 1,
+                "tool_call_count": int(state.get("tool_call_count", 0)) + 1,
                 "tool_results": [*state.get("tool_results", []), result],
                 "trace": trace,
             },
@@ -1016,6 +1035,7 @@ class CustomerServiceGraphNodes:
                             "payload": outcome,
                         },
                     ],
+                    "tool_call_count": int(state.get("tool_call_count", 0)) + 1,
                     "executed_plan_steps": [
                         *state.get("executed_plan_steps", []),
                         active_step_id,
@@ -1035,6 +1055,7 @@ class CustomerServiceGraphNodes:
                 **common_update,
                 "tool_results": [*state.get("tool_results", []), tool_result],
                 "tool_cursor": int(state.get("tool_cursor", 0)) + 1,
+                "tool_call_count": int(state.get("tool_call_count", 0)) + 1,
             },
             goto="execute_tool_call",
         )
@@ -1271,6 +1292,22 @@ class CustomerServiceGraphNodes:
                 total_tokens=response.total_tokens,
             ),
         )
+
+    def _ensure_tool_budget(
+        self,
+        state: CustomerServiceGraphState,
+        *,
+        additional: int = 1,
+    ) -> None:
+        """在工具真正执行前检查本轮上限，避免异常计划放大业务副作用。"""
+        current = int(state.get("tool_call_count", 0))
+        limit = max(int(self._settings.plan_max_tool_calls), 1)
+        if current + additional > limit:
+            raise AppError(
+                "Tool call limit exceeded",
+                code="tool_call_limit_exceeded",
+                status_code=422,
+            )
 
     async def _require_run(self, run_id: str) -> AgentRun:
         """按 run_id 读取运行记录，不存在就抛业务错误。"""

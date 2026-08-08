@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import json
-from typing import Any, AsyncIterator
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from customer_service_app.core.exceptions import AppError
 from customer_service_app.domain.schemas import ChatRequest, ChatResponse, GraphStateView
 from customer_service_app.domain.confirmations import PendingActionView
+from customer_service_app.infrastructure.cache.distributed_lock import RedisConversationLock
 from customer_service_app.services.confirmation_service import ConfirmationService
 from customer_service_app.services.human_support_service import HumanSupportService
+from customer_service_app.services.trace_service import TraceService
 from customer_service_app.workflows.context import CustomerServiceGraphContext
 from customer_service_app.workflows.nodes import CustomerServiceGraphNodes
 from customer_service_app.workflows.runtime import CustomerServiceGraphRuntime
@@ -32,6 +36,8 @@ class CustomerServiceAgent:
         graph_nodes: CustomerServiceGraphNodes,
         confirmation_service: ConfirmationService,
         human_support_service: HumanSupportService,
+        trace_service: TraceService,
+        request_lock: RedisConversationLock | None = None,
     ):
         self._session = session
 
@@ -41,10 +47,34 @@ class CustomerServiceAgent:
 
         self._confirmation_service = confirmation_service
         self._human_support_service = human_support_service
+        self._trace_service = trace_service
+        self._request_lock = request_lock
 
         self._graph_context = CustomerServiceGraphContext(nodes=graph_nodes)
 
     async def answer(self, request: ChatRequest) -> ChatResponse:
+        """按幂等键复用已落库响应，并串行保护同一会话的 Graph 状态。"""
+        async with self._lock_scope(request):
+            idempotency_key = self._idempotency_key(request)
+            if idempotency_key:
+                cached_response = await self._trace_service.get_idempotent_response(
+                    tenant_id=request.tenant_id,
+                    user_id=request.user_id,
+                    request_id=idempotency_key,
+                )
+                if cached_response:
+                    return ChatResponse.model_validate(cached_response)
+
+            response = await self._answer_unlocked(request)
+            if idempotency_key and response.run_id:
+                await self._trace_service.save_response(
+                    run_id=response.run_id,
+                    response=response.model_dump(mode="json"),
+                )
+                await self._session.commit()
+            return response
+
+    async def _answer_unlocked(self, request: ChatRequest) -> ChatResponse:
         """启动一轮普通聊天请求。
 
         这里的“启动”不是直接调用大模型，而是把请求交给 LangGraph。
@@ -94,7 +124,63 @@ class CustomerServiceAgent:
             await self._session.rollback()
             raise
 
+    @asynccontextmanager
+    async def _lock_scope(self, request: ChatRequest) -> AsyncIterator[None]:
+        """在启用 Redis 锁时保护同一会话，否则保持本地开发兼容性。"""
+        if self._request_lock is None:
+            yield
+            return
+
+        async with self._request_lock.hold(
+            tenant_id=request.tenant_id,
+            user_id=request.user_id,
+            conversation_id=request.conversation_id,
+            thread_id=request.thread_id,
+            request_id=self._idempotency_key(request),
+        ):
+            yield
+
+    @staticmethod
+    def _idempotency_key(request: ChatRequest) -> str | None:
+        """读取客户端幂等键，不把普通 request_id 误当成可重放键。"""
+        value = str(request.metadata.get("idempotency_key") or "").strip()
+        return value or None
+
     async def resume_confirmation(
+        self,
+        *,
+        tenant_id: str,
+        user_id: str,
+        confirmation_id: str,
+        decision: str,
+        reason: str | None,
+    ) -> ChatResponse:
+        """在确认单粒度串行恢复 Graph，避免重复点击同时 resume 同一线程。"""
+        if self._request_lock is None:
+            return await self._resume_confirmation_unlocked(
+                tenant_id=tenant_id,
+                user_id=user_id,
+                confirmation_id=confirmation_id,
+                decision=decision,
+                reason=reason,
+            )
+
+        async with self._request_lock.hold(
+            tenant_id=tenant_id,
+            user_id=user_id,
+            conversation_id=None,
+            thread_id=None,
+            request_id=f"confirmation:{confirmation_id}",
+        ):
+            return await self._resume_confirmation_unlocked(
+                tenant_id=tenant_id,
+                user_id=user_id,
+                confirmation_id=confirmation_id,
+                decision=decision,
+                reason=reason,
+            )
+
+    async def _resume_confirmation_unlocked(
         self,
         *,
         tenant_id: str,

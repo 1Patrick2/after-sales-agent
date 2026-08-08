@@ -3,6 +3,7 @@ from __future__ import annotations
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from customer_service_app.core.config import Settings
+from customer_service_app.infrastructure.cache.distributed_lock import RedisConversationLock
 from customer_service_app.infrastructure.cache.redis_semantic_cache import RedisSemanticCache
 from customer_service_app.infrastructure.embeddings.factory import build_embedding_client
 from customer_service_app.infrastructure.llm.openai_compatible import OpenAICompatibleLLMClient
@@ -60,6 +61,9 @@ class ApplicationContainer:
             if settings.semantic_cache_enabled
             else None
         )
+        self.request_lock = (
+            RedisConversationLock(settings) if settings.request_lock_enabled else None
+        )
 
         self.llm_client = OpenAICompatibleLLMClient(settings)
         self.search_client = SerpApiSearchClient(settings)
@@ -99,6 +103,7 @@ class ApplicationContainer:
             business_gateway=business_gateway,
         )
 
+        trace_service = TraceService(session)
         nodes = CustomerServiceGraphNodes(
             settings=self.settings,
             session=session,
@@ -111,10 +116,11 @@ class ApplicationContainer:
             memory_service=MemoryService(settings=self.settings, session=session),
             long_term_memory_service=LongTermMemoryService(session, self.settings),
             cost_service=CostGovernanceService(settings=self.settings, session=session),
-            trace_service=TraceService(session),
+            trace_service=trace_service,
             planner_service=PlannerService(
                 tool_registry=self.tool_registry,
                 max_steps=self.settings.plan_max_steps,
+                max_llm_calls=self.settings.plan_max_llm_calls,
             ),
             question_rewrite_service=QuestionRewriteService(
                 settings=self.settings,
@@ -130,6 +136,8 @@ class ApplicationContainer:
             graph_nodes=nodes,
             confirmation_service=confirmation_service,
             human_support_service=human_support_service,
+            trace_service=trace_service,
+            request_lock=self.request_lock,
         )
 
     async def close(self) -> None:
@@ -139,6 +147,7 @@ class ApplicationContainer:
 
         for resource in (
             self.mcp_client,
+            self.request_lock,
             self.semantic_cache,
             self.vector_store,
             self.lexical_retriever,
