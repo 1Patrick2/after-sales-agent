@@ -114,4 +114,16 @@ class OpsService:
                 warnings.append("MCP_AFTER_SALES_URL is not configured while MCP is enabled")
             if not self._settings.mcp_approval_signing_secret:
                 warnings.append("MCP_APPROVAL_SIGNING_SECRET is not configured while MCP is enabled")
+            if not self._settings.mcp_call_signing_secret:
+                warnings.append("MCP_CALL_SIGNING_SECRET is not configured while MCP is enabled")
+            if (
+                self._settings.mcp_after_sales_transport != "stdio"
+                and self._settings.mcp_service_auth_enabled
+                and not self._settings.mcp_service_auth_token
+            ):
+                warnings.append("MCP_SERVICE_AUTH_TOKEN is not configured while HTTP MCP auth is enabled")
+        if self._settings.v2_hil_enabled and self._settings.graph_checkpointer != "postgres":
+            warnings.append("PostgreSQL checkpoint is required while HIL is enabled")
+        if self._settings.runtime_env.lower() in {"prod", "production"} and not self._settings.security_enabled:
+            warnings.append("SECURITY_ENABLED must be true in production")
         return warnings

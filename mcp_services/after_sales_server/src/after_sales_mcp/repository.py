@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from after_sales_mcp.database import Order, SupportTicket
+from after_sales_mcp.database import CustomerProfile, Order, SupportTicket
 
 
 class AfterSalesRepository:
@@ -65,3 +65,19 @@ class AfterSalesRepository:
         self._session.add(ticket)
         await self._session.flush()
         return ticket
+
+    async def get_customer_profile(
+        self,
+        *,
+        tenant_id: str,
+        user_id: str,
+    ) -> CustomerProfile | None:
+        """Read the profile belonging to exactly one tenant and user."""
+
+        result = await self._session.execute(
+            select(CustomerProfile).where(
+                CustomerProfile.tenant_id == tenant_id,
+                CustomerProfile.user_id == user_id,
+            )
+        )
+        return result.scalar_one_or_none()

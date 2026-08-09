@@ -103,7 +103,8 @@ class Settings(BaseSettings):
     plan_parallel_execution_enabled: bool = True
     plan_max_parallel_steps: int = 3
     pending_action_ttl_seconds: int = 1800
-    graph_checkpointer: str = "memory"
+    # HIL / interrupt / resume 依赖跨进程恢复；生产默认使用 PostgreSQL。
+    graph_checkpointer: str = "postgres"
     graph_checkpoint_postgres_url: str = ""
     graph_checkpoint_setup: bool = True
     graph_durability: str = "async"
@@ -139,6 +140,17 @@ class Settings(BaseSettings):
     mcp_approval_signing_secret: str = ""
     mcp_approval_token_ttl_seconds: int = 120
     mcp_approval_issuer: str = "customer-service-agent"
+    # MCP HTTP 服务身份认证。审批 token 只代表一次业务批准，不能替代服务身份。
+    mcp_service_auth_enabled: bool = True
+    mcp_service_auth_token: str = ""
+    mcp_service_auth_secret: str = ""
+    mcp_service_auth_issuer: str = "customer-service-agent"
+    mcp_service_auth_audience: str = ""
+    mcp_service_auth_required_scope: str = "mcp:invoke"
+    # 每次 MCP 调用都签名租户、用户和工具，避免服务端只相信明文参数。
+    mcp_call_signing_secret: str = ""
+    mcp_call_context_ttl_seconds: int = 60
+    mcp_tool_contract_cache_ttl_seconds: int = 300
 
     metrics_enabled: bool = True
     langsmith_tracing: bool = False

@@ -73,8 +73,12 @@ class ApplicationContainer:
     @classmethod
     async def create(cls, settings: Settings) -> "ApplicationContainer":
         graph_runtime = await CustomerServiceGraphRuntime.create(settings)
-
-        return cls(settings=settings, graph_runtime=graph_runtime)
+        container = cls(settings=settings, graph_runtime=graph_runtime)
+        if container.mcp_client is not None:
+            starter = getattr(container.mcp_client, "start", None)
+            if starter is not None:
+                await starter()
+        return container
 
     def build_agent(self, session: AsyncSession) -> CustomerServiceAgent:
         """Create transaction-bound services around shared network clients."""

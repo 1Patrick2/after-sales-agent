@@ -8,6 +8,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
 
 from customer_service_app.core.config import Settings
+from customer_service_app.core.exceptions import ConfigurationError
 from customer_service_app.domain.schemas import GraphStateView, GraphTaskView
 from customer_service_app.observability.metrics import GRAPH_RUNS
 from customer_service_app.workflows.context import CustomerServiceGraphContext
@@ -57,6 +58,11 @@ class CustomerServiceGraphRuntime:
         """Create a runtime with memory or PostgreSQL checkpoint persistence."""
 
         checkpointer_context: AbstractAsyncContextManager[Any] | None = None
+
+        if settings.v2_hil_enabled and settings.graph_checkpointer != "postgres":
+            raise ConfigurationError(
+                "Durable PostgreSQL checkpoint is required when HIL is enabled"
+            )
 
         if settings.graph_checkpointer == "postgres":
             from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver

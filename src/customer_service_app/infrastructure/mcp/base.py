@@ -27,3 +27,7 @@ class MCPBusinessClient(Protocol):
     async def call_tool(self, *, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         """Call one MCP tool by name."""
         ...
+
+    async def start(self) -> None:
+        """Optionally establish a long-lived client session."""
+        ...

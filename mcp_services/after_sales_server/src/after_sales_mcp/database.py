@@ -38,6 +38,21 @@ class Order(Base):
     )
 
 
+class CustomerProfile(Base):
+    """Tenant-scoped customer facts used by after-sales policy decisions."""
+
+    __tablename__ = "customer_profiles"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
+    tenant_id: Mapped[str] = mapped_column(String(64), index=True)
+    user_id: Mapped[str] = mapped_column(String(64), index=True)
+    vip_level: Mapped[str] = mapped_column(String(32), default="standard")
+    risk_flags: Mapped[list] = mapped_column(JSON, default=list)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
 class SupportTicket(Base):
     """Write model for after-sales and handoff requests."""
 

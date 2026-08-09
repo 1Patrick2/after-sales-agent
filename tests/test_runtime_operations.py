@@ -52,6 +52,8 @@ async def test_readiness_accepts_milvus_vector_store(monkeypatch: pytest.MonkeyP
         embedding_model="embedding-model",
         vector_store_provider="milvus",
         milvus_uri="https://milvus.example.com",
+        graph_checkpointer="memory",
+        v2_hil_enabled=False,
     )
     monkeypatch.setattr(routes_health, "get_settings", lambda: settings)
 

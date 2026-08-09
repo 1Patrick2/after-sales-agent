@@ -51,6 +51,12 @@ async def ready() -> dict:
             bool(
                 settings.mcp_after_sales_url
                 and settings.mcp_approval_signing_secret
+                and settings.mcp_call_signing_secret
+                and (
+                    settings.mcp_after_sales_transport == "stdio"
+                    or not settings.mcp_service_auth_enabled
+                    or settings.mcp_service_auth_token
+                )
             )
             if settings.mcp_after_sales_enabled
             else None

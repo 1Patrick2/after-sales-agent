@@ -3,15 +3,31 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from mcp.server.auth.middleware.auth_context import get_access_token
+from mcp.server.auth.settings import AuthSettings
+from mcp.server.fastmcp import Context
 from mcp.server.fastmcp import FastMCP
 
 from after_sales_mcp.config import get_settings
 from after_sales_mcp.database import session_context
 from after_sales_mcp.repository import AfterSalesRepository
-from after_sales_mcp.security import verify_approval_token
+from after_sales_mcp.security import (
+    ServiceTokenVerifier,
+    verify_approval_token,
+    verify_call_context,
+)
 
 
 settings = get_settings()
+service_auth = (
+    AuthSettings(
+        issuer_url=settings.service_auth_issuer_url,
+        resource_server_url=settings.service_auth_resource_url,
+        required_scopes=[settings.service_auth_required_scope],
+    )
+    if settings.service_auth_enabled
+    else None
+)
 mcp = FastMCP(
     "after-sales-mcp-server",
     instructions=(
@@ -23,6 +39,17 @@ mcp = FastMCP(
     streamable_http_path="/mcp",
     stateless_http=True,
     json_response=True,
+    auth=service_auth,
+    token_verifier=(
+        ServiceTokenVerifier(
+            settings.service_auth_secret,
+            settings.service_auth_issuer,
+            settings.service_auth_audience,
+            settings.service_auth_required_scope,
+        )
+        if settings.service_auth_enabled
+        else None
+    ),
 )
 
 
@@ -93,7 +120,15 @@ def tool_contracts() -> str:
     )
 
 
-async def _order_payload(tenant_id: str, user_id: str, order_id: str) -> dict[str, Any]:
+async def _order_payload(
+    *,
+    context: Context,
+    tool_name: str,
+    tenant_id: str,
+    user_id: str,
+    order_id: str,
+) -> dict[str, Any]:
+    _authorize_call(context, tool_name=tool_name, tenant_id=tenant_id, user_id=user_id)
     async with session_context() as session:
         order = await AfterSalesRepository(session).get_order(
             tenant_id=tenant_id,
@@ -117,10 +152,17 @@ async def query_order_status(
     tenant_id: str,
     user_id: str,
     order_id: str,
+    ctx: Context,
 ) -> dict[str, Any]:
     """Query one order owned by the current tenant and user."""
 
-    return await _order_payload(tenant_id, user_id, order_id)
+    return await _order_payload(
+        context=ctx,
+        tool_name="query_order_status",
+        tenant_id=tenant_id,
+        user_id=user_id,
+        order_id=order_id,
+    )
 
 
 @mcp.tool()
@@ -128,10 +170,17 @@ async def query_logistics_status(
     tenant_id: str,
     user_id: str,
     order_id: str,
+    ctx: Context,
 ) -> dict[str, Any]:
     """Query logistics fields from the owned order."""
 
-    payload = await _order_payload(tenant_id, user_id, order_id)
+    payload = await _order_payload(
+        context=ctx,
+        tool_name="query_logistics_status",
+        tenant_id=tenant_id,
+        user_id=user_id,
+        order_id=order_id,
+    )
     if not payload.get("found"):
         return payload
     return {
@@ -151,10 +200,17 @@ async def query_price_protection(
     tenant_id: str,
     user_id: str,
     order_id: str,
+    ctx: Context,
 ) -> dict[str, Any]:
     """Query price-protection facts from the owned order."""
 
-    payload = await _order_payload(tenant_id, user_id, order_id)
+    payload = await _order_payload(
+        context=ctx,
+        tool_name="query_price_protection",
+        tenant_id=tenant_id,
+        user_id=user_id,
+        order_id=order_id,
+    )
     if not payload.get("found"):
         return payload
     metadata = payload.get("metadata", {})
@@ -169,14 +225,33 @@ async def query_price_protection(
 
 
 @mcp.tool()
-async def query_customer_profile(tenant_id: str, user_id: str) -> dict[str, Any]:
+async def query_customer_profile(
+    tenant_id: str,
+    user_id: str,
+    ctx: Context,
+) -> dict[str, Any]:
     """Return the minimal profile needed by after-sales policy."""
 
+    _authorize_call(
+        ctx,
+        tool_name="query_customer_profile",
+        tenant_id=tenant_id,
+        user_id=user_id,
+    )
+    async with session_context() as session:
+        profile = await AfterSalesRepository(session).get_customer_profile(
+            tenant_id=tenant_id,
+            user_id=user_id,
+        )
+    if profile is None:
+        return {"found": False, "tenant_id": tenant_id, "user_id": user_id}
     return {
+        "found": True,
         "tenant_id": tenant_id,
         "user_id": user_id,
-        "vip_level": "standard",
-        "risk_flags": [],
+        "vip_level": profile.vip_level,
+        "risk_flags": profile.risk_flags,
+        "updated_at": profile.updated_at.isoformat() if profile.updated_at else None,
     }
 
 
@@ -192,7 +267,9 @@ async def _create_ticket(
     detail: str,
     priority: str,
     metadata: dict[str, Any],
+    context: Context,
 ) -> dict[str, Any]:
+    _authorize_call(context, tool_name=tool_name, tenant_id=tenant_id, user_id=user_id)
     claims = verify_approval_token(
         token=approval_token,
         tenant_id=tenant_id,
@@ -228,6 +305,7 @@ async def create_refund_case(
     reason: str,
     refund_type: str,
     approval_token: str,
+    ctx: Context,
     conversation_id: str | None = None,
     priority: str = "normal",
 ) -> dict[str, Any]:
@@ -244,6 +322,7 @@ async def create_refund_case(
         detail=reason,
         priority=priority,
         metadata={"order_id": order_id, "refund_type": refund_type},
+        context=ctx,
     )
 
 
@@ -255,6 +334,7 @@ async def create_compensation_case(
     reason: str,
     compensation_type: str,
     approval_token: str,
+    ctx: Context,
     conversation_id: str | None = None,
     priority: str = "normal",
 ) -> dict[str, Any]:
@@ -271,6 +351,7 @@ async def create_compensation_case(
         detail=reason,
         priority=priority,
         metadata={"order_id": order_id, "compensation_type": compensation_type},
+        context=ctx,
     )
 
 
@@ -281,6 +362,7 @@ async def create_exchange_case(
     order_id: str,
     reason: str,
     approval_token: str,
+    ctx: Context,
     conversation_id: str | None = None,
     priority: str = "normal",
 ) -> dict[str, Any]:
@@ -297,6 +379,7 @@ async def create_exchange_case(
         detail=reason,
         priority=priority,
         metadata={"order_id": order_id},
+        context=ctx,
     )
 
 
@@ -306,6 +389,7 @@ async def transfer_to_human(
     user_id: str,
     reason: str,
     approval_token: str,
+    ctx: Context,
     conversation_id: str | None = None,
     priority: str = "high",
 ) -> dict[str, Any]:
@@ -322,10 +406,36 @@ async def transfer_to_human(
         detail=reason,
         priority=priority,
         metadata={},
+        context=ctx,
+    )
+
+
+def _authorize_call(
+    context: Context,
+    *,
+    tool_name: str,
+    tenant_id: str,
+    user_id: str,
+) -> None:
+    """Validate authenticated service access and signed end-user context."""
+
+    request = context.request_context.request
+    if settings.service_auth_enabled and request is not None and get_access_token() is None:
+        raise PermissionError("MCP service authentication is required")
+    meta = context.request_context.meta
+    verify_call_context(
+        context=dict(meta or {}),
+        tool_name=tool_name,
+        tenant_id=tenant_id,
+        user_id=user_id,
     )
 
 
 def main() -> None:
+    if settings.service_auth_enabled and not settings.service_auth_secret:
+        raise RuntimeError("SERVICE_AUTH_SECRET is required for HTTP MCP transport")
+    if not settings.call_signing_secret:
+        raise RuntimeError("CALL_SIGNING_SECRET is required for MCP tool calls")
     try:
         mcp.run(transport="streamable-http")
     except KeyboardInterrupt:
