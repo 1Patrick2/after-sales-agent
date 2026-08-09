@@ -42,6 +42,7 @@ class AfterSalesRepository:
         priority: str,
         metadata: dict[str, Any],
         idempotency_key: str,
+        approval_jti: str,
     ) -> SupportTicket:
         existing = await self._session.execute(
             select(SupportTicket).where(
@@ -51,6 +52,11 @@ class AfterSalesRepository:
         ticket = existing.scalar_one_or_none()
         if ticket is not None:
             return ticket
+        used_token = await self._session.execute(
+            select(SupportTicket).where(SupportTicket.approval_jti == approval_jti)
+        )
+        if used_token.scalar_one_or_none() is not None:
+            raise ValueError("Approval token has already been used")
         ticket = SupportTicket(
             tenant_id=tenant_id,
             user_id=user_id,
@@ -61,6 +67,7 @@ class AfterSalesRepository:
             priority=priority,
             metadata_json=metadata,
             idempotency_key=idempotency_key,
+            approval_jti=approval_jti,
         )
         self._session.add(ticket)
         await self._session.flush()

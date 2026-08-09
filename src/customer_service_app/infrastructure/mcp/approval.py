@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -55,6 +56,7 @@ def create_approval_token(
             "tenant_id": tenant_id,
             "tool_name": tool_name,
             "confirmation_id": confirmation_id,
+            "jti": uuid.uuid4().hex,
             "iat": int(now.timestamp()),
             "exp": int(
                 (

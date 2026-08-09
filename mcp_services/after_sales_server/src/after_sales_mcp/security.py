@@ -164,4 +164,6 @@ def verify_approval_token(
             raise ValueError(f"Approval token does not match {key}")
     if not claims.get("confirmation_id"):
         raise ValueError("Approval token does not contain confirmation_id")
+    if not claims.get("jti"):
+        raise ValueError("Approval token does not contain jti")
     return claims

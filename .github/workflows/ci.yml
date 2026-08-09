@@ -9,6 +9,28 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: mysql+aiomysql://customer_service:customer_service@127.0.0.1:3306/customer_service?charset=utf8mb4
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: customer_service
+          MYSQL_USER: customer_service
+          MYSQL_PASSWORD: customer_service
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ucustomer_service -pcustomer_service"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=20
+      redis:
+        image: redis:7.2
+        ports:
+          - 6379:6379
 
     steps:
       - name: Checkout
@@ -30,6 +52,9 @@ jobs:
 
       - name: Compile sources
         run: python -m compileall -q src scripts mcp_services/after_sales_server/src
+
+      - name: Apply database migrations
+        run: PYTHONPATH=src alembic upgrade head
 
       - name: Run tests
         run: pytest -q

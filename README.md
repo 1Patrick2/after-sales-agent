@@ -4,41 +4,9 @@
 
 相比 V1 版本，V2 围绕 LangGraph 编排、HIL（checkpoint / interrupt / resume）、MCP 业务服务边界、短期与长期记忆、模型成本治理，以及观测与评估能力持续演进。
 
-## 架构
+## 项目定位
 
-当前运行链路：
-
-```mermaid
-flowchart TD
-    API["FastAPI / Chat API"] --> AGENT["CustomerServiceAgent"]
-    AGENT -->|"人工已接管"| HUMAN["人工队列与消息落库"]
-    AGENT -->|"Bot 模式"| START((START))
-    START --> PREPARE["prepare\n校验会话 + 零 Token Planner Gate"]
-    PREPARE -->|"简单请求"| ANSWER["answer\n标准回答链路"]
-    PREPARE -->|"复杂多意图"| PLAN["plan\n有界结构化计划"]
-    PLAN --> EXECUTE["execute_plan\nReAct 执行与步数/超时限制"]
-    EXECUTE -->|"无高风险动作"| ANSWER
-    EXECUTE -->|"退款、补偿、转人工"| INTERRUPT["await_confirmation\nCheckpoint + interrupt"]
-    INTERRUPT -. "approve / reject" .-> RESUME["apply_confirmation\nCommand(resume=...)"]
-    RESUME -->|"仍有待确认动作"| INTERRUPT
-    RESUME --> ANSWER
-
-    subgraph TURN["标准回答链路"]
-      ANSWER --> COST["成本策略 + 短期历史"]
-      COST --> CACHE["Redis 语义缓存"]
-      CACHE -->|"命中"| PERSIST
-      CACHE -->|"未命中"| RETRIEVE["向量召回 || BM25 召回"]
-      RETRIEVE --> FUSION["RRF 融合 + 可选 Reranker"]
-      FUSION --> LLM["LLM + tools"]
-      LLM -->|"tool_calls"| GATEWAY["ToolRegistry -> BusinessGateway"]
-      GATEWAY -->|"本地或独立服务"| MCP["after-sales MCP"]
-      MCP --> LLM
-      LLM --> PERSIST["消息 / Trace / Token 用量落库"]
-    end
-    PERSIST --> END((END))
-```
-
-核心原则是让大模型负责理解和决策，后端工具与 MCP 服务负责查询真实事实和执行业务动作。高风险操作不由模型直接落库，而是经过租户/用户校验、Graph HIL、幂等键和审计关联后执行。
+项目将大模型用于问题理解、有限规划和工具选择；业务事实查询、权限校验、风险控制和数据写入由后端服务负责。高风险动作需要 HIL 确认、幂等控制和审计关联。
 
 ## 当前能力
 
@@ -49,6 +17,8 @@ flowchart TD
 - 知识文档按内容哈希、版本和生效时间增量同步，下线时联动清理双索引与相关语义缓存。
 - 长期记忆支持来源校验、过期时间、用户查询/纠正/删除，以及用户级记忆开关。
 - Tool Registry、Business Gateway 和独立 after-sales MCP 服务，读写工具分级治理。
+- MCP HTTP 服务支持服务 JWT、调用上下文签名和租户/用户二次校验；写操作额外校验 Approval Token。
+- PostgreSQL Checkpoint 用于跨进程恢复 LangGraph 的中断任务，MCP 工具契约支持 TTL 缓存。
 - 人工队列、模拟坐席接管、处理结论和 Bot 恢复闭环。
 - 租户级模型、历史窗口、RAG 数量、Rerank 和缓存策略调整。
 - Prometheus 运行指标、OpenTelemetry 分布式追踪，以及可选的 Grafana/Tempo 观测栈。
@@ -265,7 +235,7 @@ after-sales MCP 服务将售后能力暴露为独立治理的业务工具：
 - `create_exchange_case`
 - `transfer_to_human`
 
-只读工具在完成租户和用户校验后可以直接执行。写入工具需要签名确认 token 和幂等键，避免同一个已确认动作被重复执行。
+只读工具需要经过服务身份、调用上下文签名和租户/用户归属校验。写入工具还需要签名确认 token、唯一 `jti` 和幂等键，避免同一个已确认动作被重复执行。
 
 ## API 示例
 

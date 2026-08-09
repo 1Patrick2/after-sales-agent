@@ -11,6 +11,55 @@ from customer_service_app.infrastructure.mcp.approval import (
     build_confirmation_id,
 )
 from customer_service_app.services.business_gateway import BusinessGateway
+from customer_service_app.infrastructure.mcp.client import _build_call_meta
+
+
+def test_mcp_call_context_is_bound_to_tenant_user_and_tool(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CALL_SIGNING_SECRET", "call-secret")
+    monkeypatch.setenv("DATABASE_URL", "mysql+aiomysql://user:password@localhost/db")
+    monkeypatch.setenv("APPROVAL_SIGNING_SECRET", "approval-secret")
+
+    from after_sales_mcp.config import get_settings as get_mcp_settings
+    from after_sales_mcp.security import verify_call_context
+
+    get_mcp_settings.cache_clear()
+    metadata = _build_call_meta(
+        secret="call-secret",
+        name="query_order_status",
+        arguments={"tenant_id": "tenant-a", "user_id": "user-a", "order_id": "o-1"},
+        ttl_seconds=60,
+    )
+    verify_call_context(
+        context=metadata,
+        tool_name="query_order_status",
+        tenant_id="tenant-a",
+        user_id="user-a",
+    )
+    metadata["user_id"] = "user-b"
+    with pytest.raises(ValueError, match="signature is invalid"):
+        verify_call_context(
+            context=metadata,
+            tool_name="query_order_status",
+            tenant_id="tenant-a",
+            user_id="user-b",
+        )
+
+    mismatch_metadata = _build_call_meta(
+        secret="call-secret",
+        name="query_order_status",
+        arguments={"tenant_id": "tenant-a", "user_id": "user-b", "order_id": "o-1"},
+        ttl_seconds=60,
+    )
+    with pytest.raises(ValueError, match="does not match"):
+        verify_call_context(
+            context=mismatch_metadata,
+            tool_name="query_order_status",
+            tenant_id="tenant-a",
+            user_id="user-a",
+        )
+    get_mcp_settings.cache_clear()
 
 
 class FakeMCPClient:
@@ -83,6 +132,7 @@ def test_approval_token_binds_tool_tenant_user_and_confirmation_id() -> None:
         user_id="u001",
         arguments=arguments,
     )
+    assert claims["jti"]
 
 
 @pytest.mark.asyncio

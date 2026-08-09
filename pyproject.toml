@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src", "mcp_services/after_sales_server/src"]
 asyncio_mode = "auto"
 testpaths = ["tests"]
 

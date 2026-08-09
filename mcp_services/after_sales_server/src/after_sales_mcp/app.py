@@ -287,6 +287,7 @@ async def _create_ticket(
             priority=priority,
             metadata=metadata,
             idempotency_key=str(claims["confirmation_id"]),
+            approval_jti=str(claims["jti"]),
         )
         await session.commit()
         return {
