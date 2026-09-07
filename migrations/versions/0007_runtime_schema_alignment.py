@@ -41,8 +41,7 @@ def upgrade() -> None:
         sa.Column(
             "confirmation_prompt",
             sa.Text(),
-            nullable=False,
-            server_default="请确认是否继续执行该操作。",
+            nullable=True,
         ),
     )
     op.add_column("pending_actions", sa.Column("expire_at", sa.DateTime(timezone=True)))
@@ -63,8 +62,7 @@ def upgrade() -> None:
         sa.Column(
             "idempotency_key",
             sa.String(length=200),
-            nullable=False,
-            server_default="legacy-pending-action",
+            nullable=True,
         ),
     )
     op.add_column(
@@ -102,8 +100,20 @@ def upgrade() -> None:
         sa.text(
             "UPDATE pending_actions "
             "SET idempotency_key = id "
-            "WHERE idempotency_key IS NULL"
+            "WHERE idempotency_key IS NULL OR idempotency_key = ''"
         )
+    )
+    op.alter_column(
+        "pending_actions",
+        "confirmation_prompt",
+        existing_type=sa.Text(),
+        nullable=False,
+    )
+    op.alter_column(
+        "pending_actions",
+        "idempotency_key",
+        existing_type=sa.String(length=200),
+        nullable=False,
     )
     op.create_index(
         "ix_pending_actions_langgraph_thread_id",
