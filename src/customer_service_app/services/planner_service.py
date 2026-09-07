@@ -14,6 +14,7 @@ from customer_service_app.domain.query_rewrite import QueryRewriteResult
 from customer_service_app.domain.schemas import ChatRequest
 from customer_service_app.infrastructure.llm.base import LLMClient, LLMResponse
 from customer_service_app.observability.metrics import PLANNER_RUNS
+from customer_service_app.services.question_router import QuestionRouter
 from customer_service_app.services.tool_registry import ToolRegistry, ToolSpec
 
 
@@ -36,54 +37,25 @@ class PlannerDraft(BaseModel):
 class PlannerService:
     """Generate bounded structured plans only for genuinely complex requests."""
 
-    _condition_words = ("如果", "不行", "不能", "然后", "同时", "再", "并且", "否则")
-
     def __init__(
         self,
         *,
         tool_registry: ToolRegistry,
         max_steps: int = 6,
         max_llm_calls: int = 2,
-    ):
+        question_router: QuestionRouter | None = None,
+    ) -> None:
         self._tool_registry = tool_registry
         self._max_steps = max_steps
         self._max_llm_calls = max(int(max_llm_calls), 1)
+        self._question_router = question_router or QuestionRouter()
 
     def needs_plan(self, request: ChatRequest, *, resolved_question: str | None = None) -> bool:
         """Use a zero-token gate so simple questions never pay planner cost."""
-        question = (resolved_question or request.question).strip()
-
-        if not question:
-            return False
-
-        for condition in self._condition_words:
-            if condition in question:
-                return True
-
-        intents = 0
-
-        if self._contains_any(question, ("订单", "物流", "快递", "运单", "单号", "发货", "签收")):
-            intents += 1
-
-        if self._contains_any(question, ("退款", "退货", "退掉", "换货", "补发", "重新发")):
-            intents += 1
-
-        if self._contains_any(question, ("补偿", "赔偿", "价保", "保价", "差价", "优惠券")):
-            intents += 1
-
-        if self._contains_any(question, ("人工", "客服", "投诉", "举报", "升级处理", "12315")):
-            intents += 1
-
-        action_verbs = sum(
-            question.count(word)
-            for word in ("查询", "查看", "申请", "创建", "取消", "修改", "转", "处理")
+        return self._question_router.should_plan(
+            request,
+            resolved_question=resolved_question,
         )
-        order_ids = set(re.findall(r"\b(?:[A-Za-z]{2,8}-?)?\d{8,24}\b", question))
-
-        return intents >= 2 or action_verbs >= 2 or len(order_ids) >= 2
-
-
-
 
     async def build_plan(
         self,

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from typing import Any
 
 import httpx
@@ -72,11 +73,15 @@ class OpenSearchBM25Retriever:
         tenant_id: str,
         query: str,
         top_k: int,
+        document_types: Sequence[str] | None = None,
     ) -> list[KnowledgeChunk]:
         """查询标题和正文，标题命中的 BM25 权重更高。"""
 
         await self.ensure_index()
         try:
+            filters: list[dict[str, Any]] = [{"term": {"tenant_id": tenant_id}}]
+            if document_types:
+                filters.append({"terms": {"document_type": list(document_types)}})
             response = await self._client.post(
                 f"{self._base_url}/{self._index}/_search",
                 json={
@@ -84,7 +89,7 @@ class OpenSearchBM25Retriever:
                     "track_total_hits": False,
                     "query": {
                         "bool": {
-                            "filter": [{"term": {"tenant_id": tenant_id}}],
+                            "filter": filters,
                             "must": [
                                 {
                                     "multi_match": {

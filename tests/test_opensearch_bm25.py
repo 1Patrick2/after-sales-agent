@@ -53,6 +53,34 @@ async def test_bm25_search_always_filters_tenant() -> None:
     await retriever.close()
 
 
+async def test_bm25_search_can_restrict_document_types() -> None:
+    captured: dict = {}
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "HEAD":
+            return httpx.Response(200)
+        captured.update(json.loads(request.content))
+        return httpx.Response(200, json={"hits": {"hits": []}})
+
+    retriever = OpenSearchBM25Retriever(
+        Settings(opensearch_enabled=True, opensearch_url="https://search.example.com")
+    )
+    await retriever._client.aclose()
+    retriever._client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+
+    await retriever.search(
+        tenant_id="tenant-a",
+        query="退货条件",
+        top_k=5,
+        document_types=["policy", "faq"],
+    )
+
+    filters = captured["query"]["bool"]["filter"]
+    assert {"term": {"tenant_id": "tenant-a"}} in filters
+    assert {"terms": {"document_type": ["policy", "faq"]}} in filters
+    await retriever.close()
+
+
 async def test_bm25_upsert_preserves_structured_chunk_metadata() -> None:
     bulk_lines: list[dict] = []
 

@@ -31,6 +31,7 @@ class CustomerServiceGraphState(TypedDict, total=False):
     rewritten_question: str
 
     query_rewrite: dict[str, Any]
+    route_decision: dict[str, Any]
     rewrite_attempts: int
 
     knowledge: list[dict[str, Any]]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Protocol
 
 from customer_service_app.domain.schemas import KnowledgeChunk
@@ -14,6 +15,7 @@ class LexicalKnowledgeRetriever(Protocol):
         tenant_id: str,
         query: str,
         top_k: int,
+        document_types: Sequence[str] | None = None,
     ) -> list[KnowledgeChunk]: ...
 
     async def upsert_chunks(

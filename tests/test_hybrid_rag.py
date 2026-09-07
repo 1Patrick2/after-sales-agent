@@ -29,9 +29,11 @@ class FakeVectorStore:
         self.chunks = chunks or []
         self.error = error
         self.calls = 0
+        self.last_kwargs: dict[str, Any] = {}
 
-    async def search(self, **_: Any) -> list[KnowledgeChunk]:
+    async def search(self, **kwargs: Any) -> list[KnowledgeChunk]:
         self.calls += 1
+        self.last_kwargs = kwargs
         if self.error is not None:
             raise self.error
         return self.chunks
@@ -42,9 +44,11 @@ class FakeLexicalRetriever:
         self.chunks = chunks or []
         self.error = error
         self.calls = 0
+        self.last_kwargs: dict[str, Any] = {}
 
-    async def search(self, **_: Any) -> list[KnowledgeChunk]:
+    async def search(self, **kwargs: Any) -> list[KnowledgeChunk]:
         self.calls += 1
+        self.last_kwargs = kwargs
         if self.error is not None:
             raise self.error
         return self.chunks
@@ -133,6 +137,23 @@ async def test_hybrid_rag_skips_knowledge_for_realtime_order_lookup() -> None:
     assert result == []
     assert vector.calls == 0
     assert lexical.calls == 0
+
+
+async def test_hybrid_rag_passes_policy_scope_to_both_retrievers() -> None:
+    vector = FakeVectorStore([_chunk("policy", 0.9, "policy.md")])
+    lexical = FakeLexicalRetriever([_chunk("policy", 9.0, "policy.md")])
+    service = RagService(
+        settings=_settings(),
+        embedding_client=FakeEmbeddingClient(),  # type: ignore[arg-type]
+        vector_store=vector,  # type: ignore[arg-type]
+        lexical_retriever=lexical,  # type: ignore[arg-type]
+    )
+
+    await service.retrieve(tenant_id="tenant-a", question="七天退货政策是什么")
+
+    expected = {"faq", "matrix", "policy", "risk", "sop"}
+    assert set(vector.last_kwargs["document_types"]) == expected
+    assert set(lexical.last_kwargs["document_types"]) == expected
 
 
 async def test_hybrid_rag_degrades_to_dense_when_bm25_fails() -> None:

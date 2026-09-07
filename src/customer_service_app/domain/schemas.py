@@ -89,6 +89,7 @@ class ChatResponse(BaseModel):
     run_id: str | None = None
     cache_hit: bool = False
     query_rewrite: dict[str, Any] = Field(default_factory=dict)
+    route_decision: dict[str, Any] = Field(default_factory=dict)
     retrieval_quality: dict[str, Any] = Field(default_factory=dict)
     knowledge: list[KnowledgeChunk] = Field(default_factory=list)
     tool_calls: list[ToolCallView] = Field(default_factory=list)

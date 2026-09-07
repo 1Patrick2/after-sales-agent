@@ -171,6 +171,7 @@ class CustomerServiceGraphRuntime:
             "final_answer",
             "cache_hit",
             "query_rewrite",
+            "route_decision",
             "retrieval_quality",
             "rewrite_attempts",
             "trace",

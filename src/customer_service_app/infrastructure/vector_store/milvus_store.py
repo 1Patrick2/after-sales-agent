@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from collections.abc import Sequence
 from typing import Any
 
 from customer_service_app.core.config import Settings
@@ -121,6 +122,7 @@ class MilvusKnowledgeVectorStore(KnowledgeVectorStore):
         query_vector: list[float],
         top_k: int,
         score_threshold: float,
+        document_types: Sequence[str] | None = None,
     ) -> list[KnowledgeChunk]:
         """Search relevant knowledge chunks from Milvus with tenant isolation."""
         await self.ensure_collection()
@@ -154,7 +156,14 @@ class MilvusKnowledgeVectorStore(KnowledgeVectorStore):
                     metadata=_metadata_from_json(entity.get("metadata_json")),
                 )
             )
-        return chunks
+        if not document_types:
+            return chunks
+        allowed = {item.lower() for item in document_types}
+        return [
+            chunk
+            for chunk in chunks
+            if str(chunk.metadata.get("document_type") or "").lower() in allowed
+        ]
 
     async def upsert_chunks(
         self,

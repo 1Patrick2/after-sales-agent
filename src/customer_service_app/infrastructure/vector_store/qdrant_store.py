@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.models import (
     Distance,
     FieldCondition,
     Filter,
+    MatchAny,
     MatchValue,
     PointIdsList,
     PointStruct,
@@ -55,6 +58,7 @@ class QdrantKnowledgeVectorStore(KnowledgeVectorStore):
         query_vector: list[float],
         top_k: int,
         score_threshold: float,
+        document_types: Sequence[str] | None = None,
     ) -> list[KnowledgeChunk]:
         """用问题 embedding 到 Qdrant 检索相似知识。
 
@@ -65,9 +69,15 @@ class QdrantKnowledgeVectorStore(KnowledgeVectorStore):
         4. 把 Qdrant 返回的 payload 转成项目内部的 `KnowledgeChunk`。
         """
         await self.ensure_collection()
-        query_filter = Filter(
-            must=[FieldCondition(key="tenant_id", match=MatchValue(value=tenant_id))]
-        )
+        conditions = [FieldCondition(key="tenant_id", match=MatchValue(value=tenant_id))]
+        if document_types:
+            conditions.append(
+                FieldCondition(
+                    key="metadata.document_type",
+                    match=MatchAny(any=list(document_types)),
+                )
+            )
+        query_filter = Filter(must=conditions)
         try:
             response = await self.client.query_points(
                 collection_name=self._settings.qdrant_collection,

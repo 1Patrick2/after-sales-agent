@@ -22,6 +22,7 @@ from customer_service_app.services.long_term_memory_service import LongTermMemor
 from customer_service_app.services.human_support_service import HumanSupportService
 from customer_service_app.services.planner_service import PlannerService
 from customer_service_app.services.question_rewrite_service import QuestionRewriteService
+from customer_service_app.services.question_router import QuestionRouter
 from customer_service_app.services.rag_service import RagService
 from customer_service_app.services.risk_control_service import RiskControlService
 from customer_service_app.services.tool_registry import ToolExecutionContext
@@ -47,6 +48,7 @@ class ApplicationContainer:
         self.vector_store = build_vector_store(settings)
         self.lexical_retriever = build_lexical_retriever(settings)
         self.reranker = build_reranker(settings)
+        self.question_router = QuestionRouter()
 
         self.rag_service = RagService(
             settings=settings,
@@ -54,6 +56,7 @@ class ApplicationContainer:
             vector_store=self.vector_store,
             lexical_retriever=self.lexical_retriever,
             reranker=self.reranker,
+            question_router=self.question_router,
         )
 
         self.semantic_cache = (
@@ -125,6 +128,7 @@ class ApplicationContainer:
                 tool_registry=self.tool_registry,
                 max_steps=self.settings.plan_max_steps,
                 max_llm_calls=self.settings.plan_max_llm_calls,
+                question_router=self.question_router,
             ),
             question_rewrite_service=QuestionRewriteService(
                 settings=self.settings,
@@ -132,6 +136,7 @@ class ApplicationContainer:
             ),
             risk_control_service=RiskControlService(),
             tool_context=tool_context,
+            question_router=self.question_router,
         )
 
         return CustomerServiceAgent(

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Protocol
 
 from customer_service_app.domain.schemas import KnowledgeChunk
@@ -15,8 +16,9 @@ class KnowledgeVectorStore(Protocol):
         query_vector: list[float],
         top_k: int,
         score_threshold: float,
+        document_types: Sequence[str] | None = None,
     ) -> list[KnowledgeChunk]:
-        """Search the most relevant knowledge chunks by query vector."""
+        """Search relevant chunks, optionally restricted to document types."""
         ...
 
     async def upsert_chunks(

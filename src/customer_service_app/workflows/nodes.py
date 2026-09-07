@@ -15,6 +15,7 @@ from customer_service_app.domain.cost import CostStrategy, TokenUsage
 from customer_service_app.domain.memory import MemoryWriteCommand, ShortTermContext
 from customer_service_app.domain.planning import AgentPlan, PlanStepStatus
 from customer_service_app.domain.query_rewrite import QueryRewriteResult
+from customer_service_app.domain.routing import RouteDecision
 from customer_service_app.domain.schemas import (
     ChatMessage,
     ChatRequest,
@@ -41,6 +42,7 @@ from customer_service_app.services.long_term_memory_service import LongTermMemor
 from customer_service_app.services.memory_service import MemoryService
 from customer_service_app.services.planner_service import PlannerService
 from customer_service_app.services.question_rewrite_service import QuestionRewriteService
+from customer_service_app.services.question_router import QuestionRouter
 from customer_service_app.services.rag_service import RagService
 from customer_service_app.services.risk_control_service import RiskControlService
 from customer_service_app.services.tool_registry import ToolExecutionContext, ToolRegistry
@@ -91,7 +93,8 @@ class CustomerServiceGraphNodes:
         question_rewrite_service: QuestionRewriteService,
         risk_control_service: RiskControlService,
         tool_context: ToolExecutionContext,
-    ):
+        question_router: QuestionRouter | None = None,
+    ) -> None:
         self._settings = settings
         self._session = session
         self._llm_client = llm_client
@@ -106,6 +109,7 @@ class CustomerServiceGraphNodes:
         self._trace_service = trace_service
         self._planner_service = planner_service
         self._question_rewrite_service = question_rewrite_service
+        self._question_router = question_router or QuestionRouter()
         self._risk_control_service = risk_control_service
         self._tool_context = tool_context
 
@@ -186,6 +190,7 @@ class CustomerServiceGraphNodes:
             "memory_context": memory.model_dump(mode="json"),
             "rewritten_question": request.question,
             "query_rewrite": {},
+            "route_decision": {},
             "rewrite_attempts": 0,
             "knowledge": [],
             "retrieval_quality": {},
@@ -247,6 +252,13 @@ class CustomerServiceGraphNodes:
         if response is not None:
             await self._record_usage(state["tenant_id"], response)
 
+        route = self._question_router.route(
+            request.question,
+            resolved_question=rewrite.standalone_question,
+            rewrite=rewrite,
+            planner_enabled=self._settings.v2_planning_enabled,
+        )
+
         trace = self._append_trace(
             state,
             ChatTraceStep(
@@ -257,11 +269,13 @@ class CustomerServiceGraphNodes:
                     "confidence": rewrite.confidence,
                     "intent": rewrite.intent,
                     "needs_clarification": rewrite.needs_clarification,
+                    "route": route.model_dump(mode="json"),
                 },
             ),
         )
         update: CustomerServiceGraphState = {
             "query_rewrite": rewrite.model_dump(mode="json"),
+            "route_decision": route.model_dump(mode="json"),
             "rewritten_question": rewrite.standalone_question,
             "total_tokens": state.get("total_tokens", 0)
             + (response.total_tokens if response else 0),
@@ -331,6 +345,7 @@ class CustomerServiceGraphNodes:
         """用改写后的问题做 RAG 检索。"""
         strategy = CostStrategy.model_validate(state["cost_strategy"])
         rewrite = QueryRewriteResult.model_validate(state["query_rewrite"])
+        route = RouteDecision.model_validate(state.get("route_decision") or {})
         knowledge = await self._rag_service.retrieve(
             tenant_id=state["tenant_id"],
             question=state["rewritten_question"],
@@ -338,17 +353,24 @@ class CustomerServiceGraphNodes:
             sparse_query=rewrite.sparse_query,
             top_k=strategy.rag_top_k,
             use_rerank=strategy.use_rerank,
+            route_decision=route,
+            document_types=route.document_types,
         )
         trace = self._append_trace(
             state,
             ChatTraceStep(
                 stage="rag",
-                detail="完成知识库检索",
+                detail=(
+                    "已跳过知识库检索，当前问题由实时工具处理"
+                    if route.source == "realtime_tool"
+                    else "完成知识库检索"
+                ),
                 metadata={
                     "chunk_count": len(knowledge),
                     "top_k": strategy.rag_top_k,
                     "question": state["rewritten_question"],
                     "rerank": strategy.use_rerank,
+                    "route": route.model_dump(mode="json"),
                 },
             ),
         )
@@ -357,7 +379,10 @@ class CustomerServiceGraphNodes:
             stage="graph",
             name="retrieve",
             status="success",
-            output={"chunk_count": len(knowledge)},
+            output={
+                "chunk_count": len(knowledge),
+                "route": route.model_dump(mode="json"),
+            },
         )
         return Command(
             update={
@@ -372,9 +397,11 @@ class CustomerServiceGraphNodes:
     ) -> Command[Literal["retrieve", "clarify", "decide"]]:
         """检查召回证据是否足够，最多触发一次受控改写。"""
         chunks = [KnowledgeChunk.model_validate(item) for item in state.get("knowledge", [])]
+        route = RouteDecision.model_validate(state.get("route_decision") or {})
         quality = self._rag_service.evaluate_quality(
             question=state["rewritten_question"],
             chunks=chunks,
+            route_decision=route,
         )
         attempts = int(state.get("rewrite_attempts", 0))
         trace = self._append_trace(
@@ -405,9 +432,16 @@ class CustomerServiceGraphNodes:
         )
         if response is not None:
             await self._record_usage(state["tenant_id"], response)
+        route = self._question_router.route(
+            request.question,
+            resolved_question=rewrite.standalone_question,
+            rewrite=rewrite,
+            planner_enabled=self._settings.v2_planning_enabled,
+        )
         update: CustomerServiceGraphState = {
             **base_update,
             "query_rewrite": rewrite.model_dump(mode="json"),
+            "route_decision": route.model_dump(mode="json"),
             "rewritten_question": rewrite.standalone_question,
             "rewrite_attempts": attempts + 1,
             "total_tokens": state.get("total_tokens", 0)
@@ -423,6 +457,7 @@ class CustomerServiceGraphNodes:
         """让 Planner 或首轮 LLM 决定下一步。"""
         request = ChatRequest.model_validate(state["request"])
         strategy = CostStrategy.model_validate(state["cost_strategy"])
+        route = RouteDecision.model_validate(state.get("route_decision") or {})
 
         if self._settings.v2_planning_enabled:
             plan, planner_response = await self._planner_service.build_plan(
@@ -468,10 +503,15 @@ class CustomerServiceGraphNodes:
                 )
 
         messages = self._build_llm_messages(state)
+        tool_choice = (
+            "none"
+            if route.source == "knowledge" and route.document_types
+            else "auto"
+        )
         response = await self._llm_client.chat(
             messages,
             tools=self._tool_registry.definitions(),
-            tool_choice="auto",
+            tool_choice=tool_choice,
             model=strategy.model,
         )
         await self._record_usage(state["tenant_id"], response)
@@ -495,6 +535,7 @@ class CustomerServiceGraphNodes:
                     "finish_reason": response.finish_reason,
                     "tool_call_count": len(tool_calls),
                     "model": response.model,
+                    "tool_choice": tool_choice,
                 },
             ),
         )
@@ -507,6 +548,7 @@ class CustomerServiceGraphNodes:
                 "mode": "tool_call" if tool_calls else "direct",
                 "finish_reason": response.finish_reason,
                 "tool_call_count": len(tool_calls),
+                "tool_choice": tool_choice,
             },
         )
         update = {
@@ -1214,6 +1256,7 @@ class CustomerServiceGraphNodes:
             run_id=state.get("run_id"),
             cache_hit=bool(state.get("cache_hit")),
             query_rewrite=state.get("query_rewrite", {}),
+            route_decision=state.get("route_decision", {}),
             retrieval_quality=state.get("retrieval_quality", {}),
             knowledge=[KnowledgeChunk.model_validate(item) for item in state.get("knowledge", [])],
             tool_calls=[ToolCallView.model_validate(item) for item in state.get("tool_calls", [])],
@@ -1242,6 +1285,14 @@ class CustomerServiceGraphNodes:
         if memory_prompt:
             messages.append({"role": "system", "content": memory_prompt})
 
+        route = RouteDecision.model_validate(state.get("route_decision") or {})
+        messages.append(
+            {
+                "role": "system",
+                "content": self._route_instruction(route),
+            }
+        )
+
         history = memory.recent_messages or request.history
         messages.extend(self._to_llm_messages(history))
 
@@ -1254,6 +1305,21 @@ class CustomerServiceGraphNodes:
             )
         messages.append({"role": "user", "content": user_content})
         return messages
+
+    @staticmethod
+    def _route_instruction(route: RouteDecision) -> str:
+        """将后端路由作为受控提示传给 LLM，避免模型自行猜测数据来源。"""
+
+        scope = "、".join(route.document_types) or "未限定文档类型"
+        if route.source == "realtime_tool":
+            guidance = "本轮实时业务事实必须通过只读业务工具核实，不要用知识库内容臆测当前状态。"
+        elif route.source == "hybrid":
+            guidance = "本轮同时需要政策证据和实时业务事实；先依据知识库判断规则，再调用必要的业务工具。"
+        else:
+            guidance = "本轮是稳定知识问题，优先依据知识库回答；不要为了补充当前状态而调用订单或售后工具。"
+        if route.execution_mode == "planner":
+            guidance += "问题包含多个有依赖的动作，后端已进入 Planner 编排，遵守计划中的依赖和确认边界。"
+        return f"后端路由：{route.execution_mode}；知识范围：{scope}。{guidance}"
 
     def _build_synthesis_messages(self, state: CustomerServiceGraphState) -> list[dict[str, Any]]:
         """构造二次总结 messages。"""

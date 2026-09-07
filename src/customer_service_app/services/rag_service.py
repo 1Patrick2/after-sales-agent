@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import re
+from collections.abc import Sequence
 from time import perf_counter
 
 from customer_service_app.core.config import Settings
 from customer_service_app.domain.query_rewrite import RetrievalQuality
+from customer_service_app.domain.routing import RouteDecision
 from customer_service_app.domain.schemas import KnowledgeChunk
 from customer_service_app.infrastructure.embeddings.base import EmbeddingClient
 from customer_service_app.infrastructure.lexical_search.base import LexicalKnowledgeRetriever
@@ -17,13 +18,11 @@ from customer_service_app.observability.metrics import (
     RETRIEVAL_LATENCY,
     RETRIEVAL_RESULTS,
 )
+from customer_service_app.services.question_router import QuestionRouter
 
 
 class RagService:
     """租户隔离的向量/BM25 混合检索，支持 RRF 融合和可选 Reranker。"""
-
-    _realtime_words = ("订单状态", "物流到哪", "快递到哪", "退款进度", "工单进度")
-    _policy_words = ("规则", "政策", "条件", "期限", "是否可以", "怎么处理", "流程")
 
     def __init__(
         self,
@@ -33,12 +32,14 @@ class RagService:
         vector_store: KnowledgeVectorStore,
         lexical_retriever: LexicalKnowledgeRetriever | None = None,
         reranker: KnowledgeReranker | None = None,
+        question_router: QuestionRouter | None = None,
     ) -> None:
         self._settings = settings
         self._embedding_client = embedding_client
         self._vector_store = vector_store
         self._lexical_retriever = lexical_retriever
         self._reranker = reranker
+        self._question_router = question_router or QuestionRouter()
 
     async def retrieve(
         self,
@@ -49,6 +50,8 @@ class RagService:
         sparse_query: str | None = None,
         top_k: int | None = None,
         use_rerank: bool = False,
+        route_decision: RouteDecision | None = None,
+        document_types: Sequence[str] | None = None,
     ) -> list[KnowledgeChunk]:
         """并发召回两路候选，融合后只把最终 top_k 交给大模型。"""
 
@@ -56,10 +59,14 @@ class RagService:
             RETRIEVAL_CALLS.labels(mode="disabled", status="skipped").inc()
             return []
         resolved_top_k = top_k or self._settings.rag_top_k
-        mode = self._route(question)
-        if mode == "none":
+        decision = route_decision or self._question_router.route(question)
+        mode = self._retrieval_mode()
+        if decision.source == "realtime_tool":
             RETRIEVAL_CALLS.labels(mode="tool", status="skipped").inc()
             return []
+        allowed_document_types = tuple(
+            document_types if document_types is not None else decision.document_types
+        )
         started = perf_counter()
 
         candidate_k = max(
@@ -74,6 +81,7 @@ class RagService:
                     tenant_id=tenant_id,
                     question=dense_query or question,
                     top_k=candidate_k,
+                    document_types=allowed_document_types,
                 )
             )
         if mode in {"lexical", "hybrid"} and self._lexical_retriever is not None:
@@ -82,6 +90,7 @@ class RagService:
                     tenant_id=tenant_id,
                     query=sparse_query or question,
                     top_k=candidate_k,
+                    document_types=allowed_document_types,
                 )
             )
 
@@ -160,10 +169,12 @@ class RagService:
         *,
         question: str,
         chunks: list[KnowledgeChunk],
+        route_decision: RouteDecision | None = None,
     ) -> RetrievalQuality:
         """对检索结果做确定性质量门禁，避免低质量上下文直接进入 LLM。"""
         # 实时订单/物流查询本来就应走工具，RAG 为空不代表检索失败。
-        if self._route(question) == "none":
+        decision = route_decision or self._question_router.route(question)
+        if decision.source == "realtime_tool":
             return RetrievalQuality(
                 sufficient=True,
                 chunk_count=0,
@@ -195,6 +206,7 @@ class RagService:
         tenant_id: str,
         question: str,
         top_k: int,
+        document_types: Sequence[str] | None = None,
     ) -> list[KnowledgeChunk]:
         query_vector = await self._embedding_client.embed_query(question)
         chunks = await self._vector_store.search(
@@ -202,31 +214,19 @@ class RagService:
             query_vector=query_vector,
             top_k=top_k,
             score_threshold=self._settings.rag_score_threshold,
+            document_types=document_types,
         )
         for item in chunks:
             item.metadata = {**item.metadata, "retriever": "dense"}
         return chunks
 
     def _route(self, question: str) -> str:
-        """实时业务状态交给工具，稳定政策知识才进入 RAG。"""
+        """Compatibility helper for callers that still expect a retrieval mode."""
 
-        value = question.strip()
-        # 不用 `\b`：Python 会把中文也当作单词字符，“订单202607180001现在”会匹配失败。
-        has_business_id = bool(
-            re.search(
-                r"(?<![A-Za-z0-9])(?:[A-Za-z]{2,8}-?)?\d{8,24}(?![A-Za-z0-9])",
-                value,
-            )
-        )
-        realtime_query = any(word in value for word in self._realtime_words) or (
-            any(word in value for word in ("订单", "物流", "退款", "工单"))
-            and any(word in value for word in ("查", "查询", "状态", "进度", "到哪"))
-        )
-        if has_business_id and realtime_query and not any(
-            word in value for word in self._policy_words
-        ):
-            return "none"
+        decision = self._question_router.route(question)
+        return "none" if decision.source == "realtime_tool" else self._retrieval_mode()
 
+    def _retrieval_mode(self) -> str:
         configured = self._settings.retrieval_mode.lower()
         if configured in {"lexical", "hybrid"} and self._lexical_retriever is None:
             return "dense"
