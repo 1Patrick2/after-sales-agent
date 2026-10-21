@@ -1,0 +1,145 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-21T09:52:45.919716+00:00",
+    "git_head": "35bbb13c8f9f1f17b69ca11d0daa8460e537447e",
+    "seed": 20261021,
+    "model": "gpt-5.6-terra",
+    "embedding_provider": "ollama",
+    "retrieval_mode_configured": "hybrid",
+    "opensearch_enabled": false,
+    "security_enabled": false,
+    "graph_checkpointer": "postgres",
+    "base_url": "http://app:8000",
+    "concurrency": 1,
+    "timeout_seconds": 90.0,
+    "max_http_requests": 6,
+    "actual_http_requests": 4,
+    "note": "HTTP count is not upstream LLM call count; SDK/graph may retry."
+  },
+  "summary": {
+    "total_selected": 2,
+    "attempted": 2,
+    "pass": 0,
+    "fail": 1,
+    "needs_review": 1,
+    "not_run": 0,
+    "confirmed_success_rate": 0.0,
+    "failure_types": {
+      "graph_status_error": 1
+    },
+    "latency_ms": {
+      "request_count": 4,
+      "mean": 4522.8,
+      "p50": 4231.74,
+      "p95": 6135.32
+    }
+  },
+  "results": [
+    {
+      "case_id": "C02",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "同会话物流指代",
+      "status": "fail",
+      "failure_type": "graph_status_error",
+      "latencies_ms": [
+        6398.37,
+        3818.81
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "c3e096f0-335d-4ea1-a2dd-e9e601b508c1",
+          "thread_id": "6fbf22f6-a2b9-499c-8655-c5e07c057f3a",
+          "conversation_id": "e9e4489b-4573-407e-a664-834d74016dcf",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "cf882d99-f989-4b39-b3de-0ef30fdb4981",
+          "thread_id": "6fbf22f6-a2b9-499c-8655-c5e07c057f3a",
+          "conversation_id": "e9e4489b-4573-407e-a664-834d74016dcf",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "C06",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "无订单号不得编造",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        3229.35,
+        4644.67
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "448f5a7c-92c6-45ad-b707-0c62f19c0615",
+          "thread_id": "943c814b-9e65-44a5-ab71-ce1593790e6a",
+          "conversation_id": "381bd66c-ca84-4181-a0b2-1b9cafab161b",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "be2d405a-36dc-4d20-9fd3-6de68d9f5fdc",
+          "thread_id": "943c814b-9e65-44a5-ab71-ce1593790e6a",
+          "conversation_id": "381bd66c-ca84-4181-a0b2-1b9cafab161b",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        }
+      ]
+    }
+  ]
+}

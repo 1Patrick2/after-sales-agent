@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-21T09:43:33.122055+00:00",
+    "git_head": "35bbb13c8f9f1f17b69ca11d0daa8460e537447e",
+    "seed": 20261021,
+    "model": "gpt-5.6-terra",
+    "embedding_provider": "ollama",
+    "retrieval_mode_configured": "hybrid",
+    "opensearch_enabled": false,
+    "security_enabled": false,
+    "graph_checkpointer": "postgres",
+    "base_url": "http://app:8000",
+    "concurrency": 1,
+    "timeout_seconds": 90.0,
+    "max_http_requests": 2,
+    "actual_http_requests": 1,
+    "note": "HTTP count is not upstream LLM call count; SDK/graph may retry."
+  },
+  "summary": {
+    "total_selected": 1,
+    "attempted": 1,
+    "pass": 0,
+    "fail": 0,
+    "needs_review": 1,
+    "not_run": 0,
+    "confirmed_success_rate": 0.0,
+    "failure_types": {},
+    "latency_ms": {
+      "request_count": 1,
+      "mean": 9653.24,
+      "p50": 9653.24,
+      "p95": 9653.24
+    }
+  },
+  "results": [
+    {
+      "case_id": "K01",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "七天无理由退货条件",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        9653.24
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "475b5e47-58d6-417e-9cac-6e45985f7169",
+          "thread_id": "fae27fb5-7bb6-4502-a93c-f99385397a9b",
+          "conversation_id": "ecf885f4-3c02-406e-af24-fec1c979fca1",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "policies/七天无理由退货政策.md",
+            "policies/七天无理由退货政策.md",
+            "policies/七天无理由退货政策.md",
+            "sop/退款申请处理流程.md",
+            "policies/质量问题退换货政策.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    }
+  ]
+}

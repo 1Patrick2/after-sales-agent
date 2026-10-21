@@ -1,0 +1,1941 @@
+{
+  "02fa224f-30c9-4cf5-b876-9e54687e4845": {
+    "run_id": "02fa224f-30c9-4cf5-b876-9e54687e4845",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 9077,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "knowledge",
+          "reason": "stable_knowledge_can_use_rag",
+          "document_types": [
+            "announcement",
+            "faq",
+            "sla"
+          ],
+          "execution_mode": "direct_answer",
+          "chunk_count": 5
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "0bf2f225-73d7-4f52-b30d-2cfaa4646030": {
+    "run_id": "0bf2f225-73d7-4f52-b30d-2cfaa4646030",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 19097,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "complex_dependency_requires_planner",
+          "document_types": [],
+          "execution_mode": "planner",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "apply_confirmation",
+        "status": "approved",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      },
+      {
+        "name": "create_pending_action",
+        "status": "waiting",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "1113faa2-d1a8-4a90-883a-de20815262de": {
+    "run_id": "1113faa2-d1a8-4a90-883a-de20815262de",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 16104,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219008"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "1123a90b-09fd-450e-9128-882f06cd69be": {
+    "run_id": "1123a90b-09fd-450e-9128-882f06cd69be",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 11109,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "20a56ed8-bd41-4307-9b20-4dffd19117c7": {
+    "run_id": "20a56ed8-bd41-4307-9b20-4dffd19117c7",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 16739,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_logistics_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219102"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "22fe66ba-8e3b-4381-b036-1135dfc86fa0": {
+    "run_id": "22fe66ba-8e3b-4381-b036-1135dfc86fa0",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 3688,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "2592a0a1-f2ee-4394-96c8-4507cb3811c8": {
+    "run_id": "2592a0a1-f2ee-4394-96c8-4507cb3811c8",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 17672,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219104"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "362c129e-a569-4001-a013-c5aff0ab162f": {
+    "run_id": "362c129e-a569-4001-a013-c5aff0ab162f",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 12482,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219006"
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "392fe8fa-f345-4c46-bfb9-cb19cf5d0c64": {
+    "run_id": "392fe8fa-f345-4c46-bfb9-cb19cf5d0c64",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 16255,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219207"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "3e5b6703-59a0-4278-84e2-a2289dfaf7d0": {
+    "run_id": "3e5b6703-59a0-4278-84e2-a2289dfaf7d0",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 9420,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_logistics_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219002"
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "448f5a7c-92c6-45ad-b707-0c62f19c0615": {
+    "run_id": "448f5a7c-92c6-45ad-b707-0c62f19c0615",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 3930,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "4d127159-2f15-4f09-9d2c-3da90cccae7c": {
+    "run_id": "4d127159-2f15-4f09-9d2c-3da90cccae7c",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 13766,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "complex_dependency_requires_planner",
+          "document_types": [],
+          "execution_mode": "planner",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_plan_step",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219204"
+      },
+      {
+        "name": "apply_confirmation",
+        "status": "approved",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "create_pending_action",
+        "status": "waiting",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "506f4192-229c-4d87-a30d-527311b1bc8d": {
+    "run_id": "506f4192-229c-4d87-a30d-527311b1bc8d",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 8124,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "knowledge",
+          "reason": "stable_knowledge_can_use_rag",
+          "document_types": [
+            "faq",
+            "risk",
+            "sop"
+          ],
+          "execution_mode": "direct_answer",
+          "chunk_count": 5
+        }
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "51c0e1a4-bb35-4cd1-a142-aa820a6d6975": {
+    "run_id": "51c0e1a4-bb35-4cd1-a142-aa820a6d6975",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 3887,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "56164520-9a10-4f06-b72b-0d590f38ee88": {
+    "run_id": "56164520-9a10-4f06-b72b-0d590f38ee88",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 17407,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219105"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "66f761d2-f2ae-4737-ac5a-997a13971a5a": {
+    "run_id": "66f761d2-f2ae-4737-ac5a-997a13971a5a",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 15917,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219005"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "6ae13dc1-cb07-4ec1-a44e-edf0dad5f709": {
+    "run_id": "6ae13dc1-cb07-4ec1-a44e-edf0dad5f709",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 7881,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "knowledge",
+          "reason": "stable_policy_can_use_rag",
+          "document_types": [
+            "faq",
+            "matrix",
+            "policy",
+            "risk",
+            "sop"
+          ],
+          "execution_mode": "direct_answer",
+          "chunk_count": 5
+        }
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "6c65a446-6268-40c4-a0bb-ab81595a14f9": {
+    "run_id": "6c65a446-6268-40c4-a0bb-ab81595a14f9",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 8983,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "knowledge",
+          "reason": "stable_knowledge_can_use_rag",
+          "document_types": [],
+          "execution_mode": "direct_answer",
+          "chunk_count": 5
+        }
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "74136da5-808e-42bc-be05-900e21ae9824": {
+    "run_id": "74136da5-808e-42bc-be05-900e21ae9824",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 16177,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219101"
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "746ad22a-ea86-4f65-a3a3-e7e3466a962e": {
+    "run_id": "746ad22a-ea86-4f65-a3a3-e7e3466a962e",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 17259,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219104"
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "7d569a5b-abe3-40db-a533-ba4bf772c974": {
+    "run_id": "7d569a5b-abe3-40db-a533-ba4bf772c974",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 19877,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219206"
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "81f0e98b-8b2f-4379-9b78-5c9fbabdb873": {
+    "run_id": "81f0e98b-8b2f-4379-9b78-5c9fbabdb873",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 16430,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219208"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "88b68285-1dac-4bae-be3b-8d923f902082": {
+    "run_id": "88b68285-1dac-4bae-be3b-8d923f902082",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 11465,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_logistics_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219004"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "9986b3fe-5262-4d2e-80a9-8b7af499153d": {
+    "run_id": "9986b3fe-5262-4d2e-80a9-8b7af499153d",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 12481,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_logistics_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219007"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "9ffdf6cc-d589-421d-a4cb-d7750a3274c8": {
+    "run_id": "9ffdf6cc-d589-421d-a4cb-d7750a3274c8",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 10449,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219003"
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "aa0b305f-e7e8-400b-959c-4956cf79326d": {
+    "run_id": "aa0b305f-e7e8-400b-959c-4956cf79326d",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 11075,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "complex_dependency_requires_planner",
+          "document_types": [],
+          "execution_mode": "planner",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_plan_step",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "abedfda7-e9ff-46ab-b36b-20f47492f856": {
+    "run_id": "abedfda7-e9ff-46ab-b36b-20f47492f856",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 3807,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "bbc71c72-c3ee-4cc3-ac82-febdd015d1c5": {
+    "run_id": "bbc71c72-c3ee-4cc3-ac82-febdd015d1c5",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 17049,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219103"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_logistics_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219103"
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "bc228ee8-8fd5-4faf-862e-a456d18454fe": {
+    "run_id": "bc228ee8-8fd5-4faf-862e-a456d18454fe",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 18687,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "complex_dependency_requires_planner",
+          "document_types": [],
+          "execution_mode": "planner",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "apply_confirmation",
+        "status": "approved",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      },
+      {
+        "name": "create_pending_action",
+        "status": "waiting",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      },
+      {
+        "name": "execute_plan_step",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219202"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "bc831a05-af81-44cb-8c39-1d8f537994dc": {
+    "run_id": "bc831a05-af81-44cb-8c39-1d8f537994dc",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 19993,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219205"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "be2d405a-36dc-4d20-9fd3-6de68d9f5fdc": {
+    "run_id": "be2d405a-36dc-4d20-9fd3-6de68d9f5fdc",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 4074,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "bf7d7291-717d-4578-bf17-e1b02ceeba7e": {
+    "run_id": "bf7d7291-717d-4578-bf17-e1b02ceeba7e",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 16753,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219101"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "bfbe968b-b4fd-47b7-9e88-972ce1cb3186": {
+    "run_id": "bfbe968b-b4fd-47b7-9e88-972ce1cb3186",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 12763,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "complex_dependency_requires_planner",
+          "document_types": [],
+          "execution_mode": "planner",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_plan_step",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "c3e096f0-335d-4ea1-a2dd-e9e601b508c1": {
+    "run_id": "c3e096f0-335d-4ea1-a2dd-e9e601b508c1",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 3945,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "c7b439e5-2a32-48f9-8416-4c209925d323": {
+    "run_id": "c7b439e5-2a32-48f9-8416-4c209925d323",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 8537,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "knowledge",
+          "reason": "stable_policy_can_use_rag",
+          "document_types": [
+            "announcement",
+            "benefit",
+            "faq",
+            "matrix",
+            "policy",
+            "risk",
+            "sop"
+          ],
+          "execution_mode": "direct_answer",
+          "chunk_count": 5
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "cef8051b-9dd0-4c1d-8953-edd402a17f6c": {
+    "run_id": "cef8051b-9dd0-4c1d-8953-edd402a17f6c",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 11333,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "complex_dependency_requires_planner",
+          "document_types": [],
+          "execution_mode": "planner",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "create_pending_action",
+        "status": "waiting",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_plan_step",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219201"
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "apply_confirmation",
+        "status": "rejected",
+        "latency_ms": null,
+        "tool_name": "create_refund_case",
+        "tool_ok": false,
+        "found": null,
+        "order_id": null
+      }
+    ]
+  },
+  "cf882d99-f989-4b39-b3de-0ef30fdb4981": {
+    "run_id": "cf882d99-f989-4b39-b3de-0ef30fdb4981",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 3992,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "d91a1d86-9669-49f6-bd7a-dc61f5c6c1e6": {
+    "run_id": "d91a1d86-9669-49f6-bd7a-dc61f5c6c1e6",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 17808,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219105"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "da9c1c88-8d46-41b9-b06f-040aabd79b89": {
+    "run_id": "da9c1c88-8d46-41b9-b06f-040aabd79b89",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 19924,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": false,
+        "order_id": "202610219999"
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "dc34f7f5-2ac4-4aa0-8e8c-9ab20dc8e09e": {
+    "run_id": "dc34f7f5-2ac4-4aa0-8e8c-9ab20dc8e09e",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 8920,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "knowledge",
+          "reason": "stable_knowledge_can_use_rag",
+          "document_types": [
+            "faq",
+            "risk",
+            "sop"
+          ],
+          "execution_mode": "direct_answer",
+          "chunk_count": 5
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "e52dd713-eaf7-416f-9999-80f4303ea6c7": {
+    "run_id": "e52dd713-eaf7-416f-9999-80f4303ea6c7",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 4716,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "e9a07217-8d4b-4c7b-b952-7c5cf44bf7ad": {
+    "run_id": "e9a07217-8d4b-4c7b-b952-7c5cf44bf7ad",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 8402,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219001"
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "f89acf75-37b1-4981-96c6-48a75174c597": {
+    "run_id": "f89acf75-37b1-4981-96c6-48a75174c597",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 14523,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": true,
+        "order_id": "202610219203"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  },
+  "fc7ea260-197c-458d-90ea-105b65d26110": {
+    "run_id": "fc7ea260-197c-458d-90ea-105b65d26110",
+    "status": "success",
+    "model": "gpt-5.6-terra",
+    "total_tokens": 2770,
+    "error_code": null,
+    "steps": [
+      {
+        "name": "prepare",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "retrieve",
+        "status": "success",
+        "latency_ms": null,
+        "retrieval_route": {
+          "source": "realtime_tool",
+          "reason": "realtime_business_fact_requires_tool",
+          "document_types": [],
+          "execution_mode": "direct_tool",
+          "chunk_count": 0
+        }
+      },
+      {
+        "name": "execute_tool_call",
+        "status": "success",
+        "latency_ms": null,
+        "tool_name": "query_order_status",
+        "tool_ok": true,
+        "found": false,
+        "order_id": "202610219001"
+      },
+      {
+        "name": "decide",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "persist",
+        "status": "success",
+        "latency_ms": null
+      },
+      {
+        "name": "finalize",
+        "status": "success",
+        "latency_ms": null
+      }
+    ]
+  }
+}

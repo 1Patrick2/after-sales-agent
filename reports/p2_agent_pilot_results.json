@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-21T09:42:29.044505+00:00",
+    "git_head": "35bbb13c8f9f1f17b69ca11d0daa8460e537447e",
+    "seed": 20261021,
+    "model": "gpt-5.6-terra",
+    "embedding_provider": "ollama",
+    "retrieval_mode_configured": "hybrid",
+    "opensearch_enabled": false,
+    "security_enabled": false,
+    "graph_checkpointer": "postgres",
+    "base_url": "http://app:8000",
+    "concurrency": 1,
+    "timeout_seconds": 90.0,
+    "max_http_requests": 5,
+    "actual_http_requests": 2,
+    "note": "HTTP count is not upstream LLM call count; SDK/graph may retry."
+  },
+  "summary": {
+    "total_selected": 2,
+    "attempted": 2,
+    "pass": 1,
+    "fail": 1,
+    "needs_review": 0,
+    "not_run": 0,
+    "confirmed_success_rate": 0.5,
+    "failure_types": {
+      "retrieval_miss": 1
+    },
+    "latency_ms": {
+      "request_count": 2,
+      "mean": 9280.73,
+      "p50": 9280.73,
+      "p95": 12146.16
+    }
+  },
+  "results": [
+    {
+      "case_id": "K01",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "七天无理由退货条件",
+      "status": "fail",
+      "failure_type": "retrieval_miss",
+      "latencies_ms": [
+        12464.54
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "14e8c3bf-42f6-4c5f-afa9-56582fdaff9f",
+          "thread_id": "433145d5-de4a-4ea0-b4ce-543beba73806",
+          "conversation_id": "22bbf010-26ee-4804-b7fd-a017a40e6fb0",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "O01",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "查询已发货订单",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        6096.92
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "906982f6-381d-44b0-9d66-384d311af8f8",
+          "thread_id": "3fc34e72-bfcb-4ad5-a9ac-72016af46008",
+          "conversation_id": "e97e2cf9-be18-463a-a99c-6b3ffaa89bed",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    }
+  ]
+}

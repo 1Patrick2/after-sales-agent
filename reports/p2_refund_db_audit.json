@@ -1,0 +1,88 @@
+[
+  {
+    "case_id": "R01",
+    "order_id": "202610219201",
+    "refund_ticket_count": 0,
+    "ticket_ids": [],
+    "confirmation_statuses": [
+      "rejected"
+    ],
+    "confirmation_ids": [
+      "454deb26-6f52-4e8a-a647-9cace4cf8ea2"
+    ]
+  },
+  {
+    "case_id": "R02",
+    "order_id": "202610219202",
+    "refund_ticket_count": 1,
+    "ticket_ids": [
+      "8f77d35f-ece5-4c19-a54d-e3f45fa7d1b2"
+    ],
+    "confirmation_statuses": [
+      "executed"
+    ],
+    "confirmation_ids": [
+      "733faab7-da99-444a-a415-7abe64c08894"
+    ]
+  },
+  {
+    "case_id": "R03",
+    "order_id": "202610219203",
+    "refund_ticket_count": 0,
+    "ticket_ids": [],
+    "confirmation_statuses": [],
+    "confirmation_ids": []
+  },
+  {
+    "case_id": "R04",
+    "order_id": "202610219204",
+    "refund_ticket_count": 1,
+    "ticket_ids": [
+      "00491319-c623-4ad6-bc7f-080ecb3f50e4"
+    ],
+    "confirmation_statuses": [
+      "executed"
+    ],
+    "confirmation_ids": [
+      "368a6b14-65fc-4b31-8fa6-d3fe9ed56157"
+    ]
+  },
+  {
+    "case_id": "R05",
+    "order_id": "202610219205",
+    "refund_ticket_count": 0,
+    "ticket_ids": [],
+    "confirmation_statuses": [],
+    "confirmation_ids": []
+  },
+  {
+    "case_id": "R06",
+    "order_id": "202610219206",
+    "refund_ticket_count": 1,
+    "ticket_ids": [
+      "f34be13d-d254-4163-b76d-c4b9daf485d4"
+    ],
+    "confirmation_statuses": [
+      "executed"
+    ],
+    "confirmation_ids": [
+      "f6b8d42b-ceb3-49ca-ab6f-c051f7f3f352"
+    ]
+  },
+  {
+    "case_id": "R07",
+    "order_id": "202610219207",
+    "refund_ticket_count": 0,
+    "ticket_ids": [],
+    "confirmation_statuses": [],
+    "confirmation_ids": []
+  },
+  {
+    "case_id": "R08",
+    "order_id": "202610219208",
+    "refund_ticket_count": 0,
+    "ticket_ids": [],
+    "confirmation_statuses": [],
+    "confirmation_ids": []
+  }
+]
