@@ -55,6 +55,8 @@ P0 的 LangGraph、HIL、Checkpoint、Redis 锁、订单查询和基础测试是
 
 新增 `tests/test_p1_cross_store_windows.py`、`tests/test_p1_confirmation_concurrency_db.py`、JWT 集成测试及合成数据/只读核对脚本；未更改 `.env`、密钥或原有 `docker-compose.yml`、`.dockerignore`、`.serena/`。后面三者仍为用户原有未提交状态。没有 push。
 
+Git 交付分支为 `codex/refund-hil-p0`；P0 本地提交 `8d93f29`，P1 鉴权提交 `81e647b`，P1 可靠性源码和本报告首版提交 `8f09a10`。提交时仅明确暂存本阶段文件，`git diff --cached --check` 无差异错误，暂存内容常见密钥字面量扫描为 0。保留原有未提交 `M docker-compose.yml`、`?? .dockerignore`、`?? .serena/`，未覆盖或暂存。对本轮源码/脚本/测试的 Ruff `E4,E7,E9,F` 检查通过；全规则检查仍报 45 条（含 WSL 挂载执行位与既有风格项），不宣称全规则 lint 通过。
+
 ## 复现与下一步
 
 默认回归（Ubuntu-22.04 WSL，确保当前本地演示服务可用）：
