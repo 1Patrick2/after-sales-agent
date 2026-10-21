@@ -239,6 +239,9 @@ class ConfirmationService:
             expire_at = created_at + timedelta(
                 seconds=self._settings.pending_action_ttl_seconds
             )
+        if expire_at.tzinfo is None:
+            # MySQL DATETIME drops the timezone from the UTC value written by create_for_tool.
+            expire_at = expire_at.replace(tzinfo=timezone.utc)
         return expire_at < datetime.now(timezone.utc)
 
     @staticmethod

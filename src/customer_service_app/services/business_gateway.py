@@ -4,6 +4,7 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from customer_service_app.core.exceptions import AppError
 from customer_service_app.infrastructure.mcp.base import MCPBusinessClient
 from customer_service_app.infrastructure.db.repositories import OrderRepository, TicketRepository
 from customer_service_app.services.human_support_service import HumanSupportService
@@ -115,6 +116,17 @@ class BusinessGateway:
                     "approval_token": approval_token,
                 },
             )
+        order = await OrderRepository(self._session).get_by_order_id(
+            tenant_id=tenant_id,
+            user_id=user_id,
+            order_id=order_id,
+        )
+        if order is None:
+            raise AppError(
+                "Order not found for current user",
+                code="order_not_found",
+                status_code=404,
+            )
         ticket = await TicketRepository(self._session).create(
             tenant_id=tenant_id,
             user_id=user_id,
@@ -123,7 +135,7 @@ class BusinessGateway:
             title=f"退款申请：{order_id}",
             detail=reason,
             priority=priority,
-            metadata={"order_id": order_id, **(metadata or {})},
+            metadata={**(metadata or {}), "order_id": order_id},
         )
         return {"ticket_id": ticket.id, "status": ticket.status, "category": ticket.category}
 

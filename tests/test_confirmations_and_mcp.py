@@ -29,6 +29,19 @@ def test_pending_action_expiration_uses_configured_ttl() -> None:
     assert service._is_expired(fresh_action) is False  # type: ignore[arg-type]
 
 
+def test_pending_action_expiration_accepts_mysql_naive_utc_expire_at() -> None:
+    service = ConfirmationService(
+        session=object(),  # type: ignore[arg-type]
+        settings=Settings(),
+    )
+    now = datetime.now(timezone.utc)
+    fresh = SimpleNamespace(expire_at=(now + timedelta(minutes=5)).replace(tzinfo=None))
+    expired = SimpleNamespace(expire_at=(now - timedelta(minutes=5)).replace(tzinfo=None))
+
+    assert service._is_expired(fresh) is False  # type: ignore[arg-type]
+    assert service._is_expired(expired) is True  # type: ignore[arg-type]
+
+
 def test_mcp_tool_result_prefers_structured_content() -> None:
     result = SimpleNamespace(structured_content={"ticket_id": "t001", "status": "open"})
 

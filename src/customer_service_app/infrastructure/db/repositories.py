@@ -285,13 +285,19 @@ class PendingActionRepository:
     ) -> PendingAction:
         """Create one pending action waiting for confirmation."""
 
+        # MySQL DATETIME stores no timezone. Write UTC explicitly instead of relying
+        # on the server's local NOW() default, which made HIL wait times negative.
+        created_at = datetime.now(timezone.utc).replace(tzinfo=None)
         pending_action = PendingAction(tenant_id=tenant_id, user_id=user_id, conversation_id=conversation_id,
                                action_type=action_type, tool_name=tool_name, arguments_json=arguments,
                                confirmation_prompt=confirmation_prompt, idempotency_key=idempotency_key,
                                risk_level=risk_level, expire_at=expire_at, langgraph_thread_id=langgraph_thread_id,
-                               status = 'pending')
+                               status = 'pending', created_at=created_at, updated_at=created_at)
         self._session.add(pending_action)
         await self._session.flush()
+        # MySQL server defaults are expired after flush; load them asynchronously before
+        # the API serializes this action, so attribute access cannot trigger lazy I/O.
+        await self._session.refresh(pending_action, attribute_names=["created_at", "updated_at"])
         return pending_action
 
     async def get_owned(
@@ -382,6 +388,7 @@ class PendingActionRepository:
                 or_(PendingAction.expire_at.is_(None), PendingAction.expire_at > now),
             )
             .values(status="approved", approved_at=now)
+            .execution_options(synchronize_session=False)
         )
         result = await self._session.execute(statement)
         await self._session.flush()

@@ -102,6 +102,10 @@ class QuestionRouter:
             return False
         if any(word in question for word in self._condition_words):
             return True
+        if self._contains_any(question, ("提交退款申请", "申请退款", "创建退款工单")) and not self._contains_any(
+            question, ("如何", "怎么", "流程", "条件", "步骤")
+        ):
+            return True
 
         intents = 0
         if self._contains_any(question, ("订单", "物流", "快递", "运单", "单号", "发货", "签收")):

@@ -200,6 +200,12 @@ class CustomerServiceAgent:
                 user_id=user_id,
                 action_id=confirmation_id,
             )
+            if action.status != "pending":
+                raise AppError(
+                    "Confirmation is not pending",
+                    code="confirmation_not_pending",
+                    status_code=409,
+                )
             if not action.langgraph_thread_id:
                 raise AppError(
                     "Confirmation is not bound to a graph thread",

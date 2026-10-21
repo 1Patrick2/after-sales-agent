@@ -48,3 +48,16 @@ def test_complex_request_enters_planner_when_enabled() -> None:
 
     assert decision.execution_mode == "planner"
     assert decision.reason == "complex_dependency_requires_planner"
+
+
+def test_explicit_refund_submission_enters_planner_for_confirmation() -> None:
+    router = QuestionRouter()
+
+    submission = router.route(
+        "请为订单 202610210001 提交退款申请，原因是耳机持续杂音",
+        planner_enabled=True,
+    )
+    policy_question = router.route("如何申请退款？", planner_enabled=True)
+
+    assert submission.execution_mode == "planner"
+    assert policy_question.execution_mode != "planner"

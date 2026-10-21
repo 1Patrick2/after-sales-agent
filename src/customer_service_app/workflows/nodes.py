@@ -1059,6 +1059,17 @@ class CustomerServiceGraphNodes:
                 goto="persist",
             )
 
+        # The prompt stored before interrupt is no longer a valid final answer.
+        # Clearing it lets finalize synthesize a reply from the approved result.
+        common_update["final_answer"] = None
+        tool_result = ToolResultView(
+            tool_call_id=state.get("active_call_id") or confirmation_id,
+            name=action.tool_name,
+            ok=True,
+            payload=outcome,
+        ).model_dump(mode="json")
+        common_update["tool_results"] = [*state.get("tool_results", []), tool_result]
+
         if state.get("flow_origin") == "plan":
             plan = AgentPlan.model_validate(state["plan"])
             active_step_id = state.get("active_step_id", "")
@@ -1086,16 +1097,9 @@ class CustomerServiceGraphNodes:
                 goto="execute_plan_step",
             )
 
-        tool_result = ToolResultView(
-            tool_call_id=state.get("active_call_id") or confirmation_id,
-            name=action.tool_name,
-            ok=True,
-            payload=outcome,
-        ).model_dump(mode="json")
         return Command(
             update={
                 **common_update,
-                "tool_results": [*state.get("tool_results", []), tool_result],
                 "tool_cursor": int(state.get("tool_cursor", 0)) + 1,
                 "tool_call_count": int(state.get("tool_call_count", 0)) + 1,
             },
