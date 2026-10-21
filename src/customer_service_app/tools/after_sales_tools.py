@@ -23,6 +23,7 @@ async def create_refund_case(
             "evidence_urls": arguments.get("evidence_urls", []),
         },
         approval_token=context.approval_token,
+        confirmation_id=context.confirmation_id,
     )
 
 

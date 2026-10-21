@@ -116,6 +116,12 @@ class TicketRepository:
         """保存数据库会话。"""
         self._session = session
 
+    async def get_by_idempotency_key(self, *, idempotency_key: str) -> SupportTicket | None:
+        result = await self._session.execute(
+            select(SupportTicket).where(SupportTicket.idempotency_key == idempotency_key)
+        )
+        return result.scalars().one_or_none()
+
     async def create(
         self,
         *,

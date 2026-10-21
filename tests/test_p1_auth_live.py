@@ -68,6 +68,14 @@ def test_enabled_auth_enforces_owner_and_tenant_on_real_routes() -> None:
         assert foreign_approval.status_code == 404
         assert foreign_approval.json()["code"] == "confirmation_not_found"
 
+        foreign_rejection = client.post(
+            f"{base}/reject",
+            json={"tenant_id": "default", "user_id": "p1_foreign_customer"},
+            headers=token("p1_foreign_customer", "default", ["customer"]),
+        )
+        assert foreign_rejection.status_code == 404
+        assert foreign_rejection.json()["code"] == "confirmation_not_found"
+
         cross_tenant_chat = client.post(
             "/api/v1/chat",
             json={"tenant_id": "default", "user_id": "p0_acceptance", "question": "你好"},

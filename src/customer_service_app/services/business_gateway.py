@@ -99,6 +99,7 @@ class BusinessGateway:
         priority: str = "normal",
         metadata: dict[str, Any] | None = None,
         approval_token: str | None = None,
+        confirmation_id: str | None = None,
     ) -> dict[str, Any]:
         """Create a refund case in the after-sales system."""
 
@@ -127,7 +128,29 @@ class BusinessGateway:
                 code="order_not_found",
                 status_code=404,
             )
-        ticket = await TicketRepository(self._session).create(
+        tickets = TicketRepository(self._session)
+        idempotency_key = f"refund:{confirmation_id}" if confirmation_id else None
+        if idempotency_key:
+            existing = await tickets.get_by_idempotency_key(idempotency_key=idempotency_key)
+            if existing is not None:
+                if (
+                    existing.tenant_id != tenant_id
+                    or existing.user_id != user_id
+                    or existing.category != "refund"
+                    or (existing.metadata_json or {}).get("order_id") != order_id
+                    or existing.detail != reason
+                ):
+                    raise AppError(
+                        "Confirmation already used for another refund request",
+                        code="refund_confirmation_conflict",
+                        status_code=409,
+                    )
+                return {
+                    "ticket_id": existing.id,
+                    "status": existing.status,
+                    "category": existing.category,
+                }
+        ticket = await tickets.create(
             tenant_id=tenant_id,
             user_id=user_id,
             conversation_id=conversation_id,
@@ -136,6 +159,7 @@ class BusinessGateway:
             detail=reason,
             priority=priority,
             metadata={**(metadata or {}), "order_id": order_id},
+            idempotency_key=idempotency_key,
         )
         return {"ticket_id": ticket.id, "status": ticket.status, "category": ticket.category}
 

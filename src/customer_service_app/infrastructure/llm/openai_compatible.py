@@ -63,8 +63,8 @@ class OpenAICompatibleLLMClient(LLMClient):
             response = await self.client.chat.completions.create(**kwargs)
         except Exception as e:
             LLM_CALLS.labels(model=selected_model, status="error").inc()
-            logging.info("llm chat create error: %s", e)
-            raise ExternalServiceError(f"llm request error: {e}") from e
+            logging.warning("llm chat request failed: %s", type(e).__name__)
+            raise ExternalServiceError("llm request failed") from e
         choice = response.choices[0]
         message = choice.message
 
@@ -133,8 +133,8 @@ class OpenAICompatibleLLMClient(LLMClient):
             LLM_CALLS.labels(model=selected_model, status="success").inc()
         except Exception as exc:
             LLM_CALLS.labels(model=selected_model, status="error").inc()
-            logging.info("llm stream chat create error: %s", exc)
-            raise ExternalServiceError(f"llm stream request error: {exc}") from exc
+            logging.warning("llm stream request failed: %s", type(exc).__name__)
+            raise ExternalServiceError("llm stream request failed") from exc
 
 
     async def close(self) -> None:
