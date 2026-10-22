@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-22T01:51:27.312202+00:00",
+    "git_head": "unavailable",
+    "seed": 20261021,
+    "model": "gpt-5.6-terra",
+    "embedding_provider": "ollama",
+    "retrieval_mode_configured": "hybrid",
+    "opensearch_enabled": false,
+    "security_enabled": false,
+    "graph_checkpointer": "postgres",
+    "base_url": "http://app:8000",
+    "concurrency": 1,
+    "timeout_seconds": 90.0,
+    "max_http_requests": 4,
+    "actual_http_requests": 1,
+    "note": "HTTP count is not upstream LLM call count; SDK/graph may retry."
+  },
+  "summary": {
+    "total_selected": 1,
+    "attempted": 1,
+    "pass": 0,
+    "fail": 0,
+    "needs_review": 1,
+    "not_run": 0,
+    "confirmed_success_rate": 0.0,
+    "failure_types": {},
+    "latency_ms": {
+      "request_count": 1,
+      "mean": 7039.66,
+      "p50": 7039.66,
+      "p95": 7039.66
+    }
+  },
+  "results": [
+    {
+      "case_id": "K02",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "质量问题举证",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        7039.66
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "986297b7-897e-40e0-93cf-de25cced2d49",
+          "thread_id": "ee561c95-22c5-456f-933b-1bb1064f7425",
+          "conversation_id": "51f5a20f-123a-4aab-92b6-a9122a870257",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "matrices/商品类目退换限制矩阵.md",
+            "policies/质量问题退换货政策.md",
+            "risk/异常退款与凭证规则.md",
+            "sop/退款申请处理流程.md",
+            "policies/质量问题退换货政策.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    }
+  ]
+}

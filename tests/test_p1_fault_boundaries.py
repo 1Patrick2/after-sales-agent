@@ -118,5 +118,6 @@ async def test_planner_model_failure_uses_bounded_rule_fallback_without_executin
     )
     assert response is None
     assert plan is not None
+    assert plan.origin == "rule_fallback"
     assert any(step.tool_name == "create_refund_case" and step.requires_confirmation for step in plan.steps)
     model.chat.assert_awaited_once()

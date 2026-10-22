@@ -97,6 +97,20 @@ class QuestionRewriteService:
                 original=original,
                 context_payload=context_payload,
             )
+            if (
+                result.needs_clarification
+                and not result.missing_fields
+                and self._business_id_pattern.search(result.standalone_question)
+                and any(word in original for word in ("物流", "快递", "订单状态", "单号"))
+            ):
+                # 已有可信会话中的订单号，且只是只读查询；不重复追问同一编号。
+                result = result.model_copy(
+                    update={
+                        "needs_clarification": False,
+                        "clarification_question": None,
+                        "reason": f"{result.reason}; resolved_read_only_reference",
+                    }
+                )
             if result.confidence < self._settings.semantic_rewrite_min_confidence:
                 return self._rule_fallback(original, context), response
             return result, response

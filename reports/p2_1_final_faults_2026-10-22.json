@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-22T02:20:59.842170+00:00",
+    "git_head": "unavailable",
+    "environment": "pytest Mock regression; no real LLM or HTTP fault"
+  },
+  "summary": {
+    "total_selected": 2,
+    "attempted": 2,
+    "pass": 2,
+    "fail": 0,
+    "needs_review": 0,
+    "not_run": 0,
+    "confirmed_success_rate": 1.0,
+    "failure_types": {},
+    "latency_ms": {
+      "request_count": 2,
+      "mean": 2763.3,
+      "p50": 2763.3,
+      "p95": 2847.06
+    }
+  },
+  "results": [
+    {
+      "case_id": "F05",
+      "category": "fault",
+      "mode": "mock_regression",
+      "scenario": "LLM 失效时受控回退",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        2856.37
+      ],
+      "pytest_nodeid": "tests/test_p1_fault_boundaries.py::test_planner_model_failure_uses_bounded_rule_fallback_without_executing_tool",
+      "return_code": 0,
+      "evidence": "one existing Mock test; not a real API fault injection"
+    },
+    {
+      "case_id": "F06",
+      "category": "fault",
+      "mode": "mock_regression",
+      "scenario": "工具超时协作取消",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        2670.23
+      ],
+      "pytest_nodeid": "tests/test_p1_fault_boundaries.py::test_tool_timeout_cancels_cooperative_handler_before_side_effect",
+      "return_code": 0,
+      "evidence": "one existing Mock test; not a real API fault injection"
+    }
+  ]
+}

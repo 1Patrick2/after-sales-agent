@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from customer_service_app.domain.schemas import ChatRequest
 from customer_service_app.services.question_router import QuestionRouter
 
@@ -61,3 +63,68 @@ def test_explicit_refund_submission_enters_planner_for_confirmation() -> None:
 
     assert submission.execution_mode == "planner"
     assert policy_question.execution_mode != "planner"
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "我确认要给订单202610219203发起退款申请。",
+        "订单202610219207需要退款申请，请提交。",
+        "请提交订单202610219208的退款申请，不要直接执行支付退款。",
+    ],
+)
+def test_explicit_refund_application_variants_enter_confirmation_planner(
+    question: str,
+) -> None:
+    decision = QuestionRouter().route(question, planner_enabled=True)
+
+    assert decision.execution_mode == "planner"
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "退款申请处理后一般多久能到账？",
+        "客服创建退款申请前应该做哪些步骤？",
+        "如何提交退款申请？",
+        "请问如何提交退款申请？",
+        "不要提交退款申请，我只想了解政策。",
+    ],
+)
+def test_refund_consultation_does_not_enter_write_planner(question: str) -> None:
+    decision = QuestionRouter().route(question, planner_enabled=True)
+
+    assert decision.execution_mode != "planner"
+    assert decision.source == "knowledge"
+
+
+def test_quality_evidence_question_keeps_policy_documents_in_scope() -> None:
+    decision = QuestionRouter().route(
+        "耳机功能异常申请售后需要哪些凭证？", planner_enabled=True
+    )
+
+    assert decision.source == "knowledge"
+    assert "policy" in decision.document_types
+
+
+def test_rewrite_does_not_discard_original_policy_scope() -> None:
+    decision = QuestionRouter().route(
+        "耳机功能异常申请售后需要哪些凭证？",
+        resolved_question="耳机功能异常申请售后需要提供哪些凭证或证明材料？",
+        planner_enabled=True,
+    )
+
+    assert decision.source == "knowledge"
+    assert "policy" in decision.document_types
+
+
+def test_rewrite_cannot_turn_refund_submission_into_consultation() -> None:
+    router = QuestionRouter()
+    original = "请为这个订单提交退款申请。"
+    rewritten = "订单202610228206当前已发货，如何提交退款申请？该状态下规则是什么？"
+    request = ChatRequest(user_id="u1", question=original)
+
+    decision = router.route(original, resolved_question=rewritten, planner_enabled=True)
+
+    assert decision.execution_mode == "planner"
+    assert router.should_plan(request, resolved_question=rewritten) is True

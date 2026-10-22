@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-22T02:02:49.564948+00:00",
+    "git_head": "unavailable",
+    "security_enabled": true,
+    "jwt_secret": "ephemeral_in_process_not_persisted",
+    "environment": "isolated TestClient with real local services"
+  },
+  "summary": {
+    "total_selected": 4,
+    "attempted": 4,
+    "pass": 4,
+    "fail": 0,
+    "needs_review": 0,
+    "not_run": 0,
+    "confirmed_success_rate": 1.0,
+    "failure_types": {},
+    "latency_ms": {
+      "request_count": 4,
+      "mean": 2579.87,
+      "p50": 34.86,
+      "p95": 8720.68
+    }
+  },
+  "results": [
+    {
+      "case_id": "I01",
+      "category": "isolation",
+      "mode": "isolated_jwt_http",
+      "scenario": "无令牌拒绝确认单访问",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        64.21
+      ],
+      "responses": [],
+      "http_status": 401,
+      "error_code": "authentication_required"
+    },
+    {
+      "case_id": "I02",
+      "category": "isolation",
+      "mode": "isolated_jwt_http",
+      "scenario": "跨用户订单查不到",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        10248.29
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "b95d7a65-a2bb-4b38-b941-f759d7e9f0fd",
+          "thread_id": "4ba10da5-3939-47fe-8335-635a1ebfea1e",
+          "conversation_id": "fe62bcaa-83da-4efe-ba3d-85e54d306c05",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "http_status": 200,
+      "error_code": null
+    },
+    {
+      "case_id": "I03",
+      "category": "isolation",
+      "mode": "isolated_jwt_http",
+      "scenario": "跨租户身份拒绝",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        5.52
+      ],
+      "responses": [],
+      "http_status": 403,
+      "error_code": "permission_denied"
+    },
+    {
+      "case_id": "I04",
+      "category": "isolation",
+      "mode": "mock_tool_schema",
+      "scenario": "模型工具参数不能伪造身份",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        1.46
+      ],
+      "responses": [],
+      "error_code": "tool_arguments_invalid"
+    }
+  ]
+}

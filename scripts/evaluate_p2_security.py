@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from datetime import datetime, timezone
 import json
 import os
@@ -25,6 +26,13 @@ from scripts.evaluate_agent import TENANT_ID, USER_ID, score_chat_case, sanitize
 ROOT = Path(__file__).resolve().parents[1]
 CASES = ROOT / "evals" / "agent_cases.jsonl"
 OUTPUT = ROOT / "reports" / "p2_security_results.json"
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--cases", type=Path, default=CASES)
+    parser.add_argument("--output-json", type=Path, default=OUTPUT)
+    return parser.parse_args(argv)
 
 
 def _token(subject: str, tenant_id: str) -> dict[str, str]:
@@ -108,11 +116,12 @@ async def _run_tool_identity(result: dict[str, Any]) -> None:
 
 
 async def main() -> None:
+    args = parse_args()
     # Must be set before Settings is constructed. Token is ephemeral and never printed.
     os.environ["SECURITY_ENABLED"] = "true"
     os.environ["JWT_SECRET_KEY"] = secrets.token_urlsafe(48)
     get_settings.cache_clear()
-    cases = [json.loads(line) for line in CASES.read_text(encoding="utf-8").splitlines() if line.strip()]
+    cases = [json.loads(line) for line in args.cases.read_text(encoding="utf-8").splitlines() if line.strip()]
     cases = [case for case in cases if case["category"] == "isolation"]
     results: list[dict[str, Any]] = []
     with TestClient(create_app()) as client:
@@ -141,7 +150,7 @@ async def main() -> None:
         },
         "summary": summarize(results), "results": results,
     }
-    OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    args.output_json.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(data["summary"], ensure_ascii=False))
 
 

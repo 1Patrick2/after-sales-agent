@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 PlanActionType = Literal["rag", "tool", "llm", "confirm", "handoff"]
 PlanStepStatus = Literal["pending", "running", "success", "failed", "skipped"]
 PlanDecision = Literal["direct", "planned"]
+PlanOrigin = Literal["unknown", "llm_generated", "llm_repaired", "rule_fallback"]
 
 
 class PlanStep(BaseModel):
@@ -31,6 +32,7 @@ class AgentPlan(BaseModel):
     conversation_id: str
     user_goal: str
     decision: PlanDecision = "planned"
+    origin: PlanOrigin = "unknown"
     steps: list[PlanStep] = Field(default_factory=list)
     max_steps: int = 6
 

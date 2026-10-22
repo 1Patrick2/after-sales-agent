@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from datetime import datetime, timezone
 import json
 import os
@@ -20,7 +21,16 @@ TESTS = {
 }
 
 
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--output-json", type=Path, default=ROOT / "reports" / "p2_fault_results.json"
+    )
+    return parser.parse_args(argv)
+
+
 def main() -> None:
+    args = parse_args()
     results = []
     for case_id, nodeid in TESTS.items():
         started = time.perf_counter()
@@ -49,8 +59,7 @@ def main() -> None:
         },
         "summary": summarize(results), "results": results,
     }
-    path = ROOT / "reports" / "p2_fault_results.json"
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    args.output_json.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(data["summary"], ensure_ascii=False))
 
 

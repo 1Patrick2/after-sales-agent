@@ -1,0 +1,336 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-22T02:05:14.367375+00:00",
+    "tenant_id": "p2-evaluation",
+    "top_k": 5,
+    "configured_mode": "hybrid",
+    "effective_mode": "dense",
+    "embedding_provider": "ollama",
+    "opensearch_enabled": false,
+    "answer_faithfulness": "not_evaluated; requires human review"
+  },
+  "metrics": {
+    "valid_n": 18,
+    "hit_at_1": 0.5555555555555556,
+    "hit_at_3": 0.6666666666666666,
+    "hit_at_5": 0.6666666666666666,
+    "mrr": 0.6111111111111112
+  },
+  "rows": [
+    {
+      "id": "exact-policy-code",
+      "kind": "valid",
+      "relevant_source": "policies/七天无理由退货政策.md",
+      "rank": 2,
+      "sources": [
+        "policies/质量问题退换货政策.md",
+        "policies/七天无理由退货政策.md",
+        "matrices/售后赔付标准矩阵.md",
+        "sop/投诉升级与转人工流程.md",
+        "policies/七天无理由退货政策.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "semantic-return",
+      "kind": "valid",
+      "relevant_source": "matrices/商品类目退换限制矩阵.md",
+      "rank": 2,
+      "sources": [
+        "manuals/智能耳机使用与保修手册.md",
+        "matrices/商品类目退换限制矩阵.md",
+        "policies/七天无理由退货政策.md",
+        "manuals/智能耳机使用与保修手册.md",
+        "troubleshooting/智能耳机故障排查.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "refund-arrival",
+      "kind": "valid",
+      "relevant_source": "faq/退款到账常见问题.md",
+      "rank": 1,
+      "sources": [
+        "faq/退款到账常见问题.md",
+        "faq/退款到账常见问题.md",
+        "policies/七天无理由退货政策.md",
+        "sop/退款申请处理流程.md",
+        "risk/异常退款与凭证规则.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "payment-account",
+      "kind": "valid",
+      "relevant_source": "faq/退款到账常见问题.md",
+      "rank": 1,
+      "sources": [
+        "faq/退款到账常见问题.md",
+        "sop/退款申请处理流程.md",
+        "risk/异常退款与凭证规则.md",
+        "faq/退款到账常见问题.md",
+        "sop/退款申请处理流程.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "logistics-code",
+      "kind": "expired",
+      "relevant_source": "announcements/春节物流时效公告.md",
+      "rank": null,
+      "sources": [
+        "risk/异常退款与凭证规则.md",
+        "faq/退款到账常见问题.md",
+        "sla/企业客户响应时效.md",
+        "faq/退款到账常见问题.md",
+        "risk/异常退款与凭证规则.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "delivered-missing",
+      "kind": "valid",
+      "relevant_source": "faq/订单与物流常见问题.md",
+      "rank": 1,
+      "sources": [
+        "faq/订单与物流常见问题.md",
+        "sop/退款申请处理流程.md",
+        "policies/七天无理由退货政策.md",
+        "policies/七天无理由退货政策.md",
+        "sop/退款申请处理流程.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "defect-evidence",
+      "kind": "valid",
+      "relevant_source": "policies/质量问题退换货政策.md",
+      "rank": null,
+      "sources": [
+        "risk/异常退款与凭证规则.md",
+        "risk/异常退款与凭证规则.md",
+        "sop/退款申请处理流程.md",
+        "risk/异常退款与凭证规则.md",
+        "sop/投诉升级与转人工流程.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "refund-sop",
+      "kind": "valid",
+      "relevant_source": "sop/退款申请处理流程.md",
+      "rank": 1,
+      "sources": [
+        "sop/退款申请处理流程.md",
+        "sop/退款申请处理流程.md",
+        "sop/退款申请处理流程.md",
+        "risk/异常退款与凭证规则.md",
+        "faq/退款到账常见问题.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "handoff",
+      "kind": "valid",
+      "relevant_source": "sop/投诉升级与转人工流程.md",
+      "rank": null,
+      "sources": [],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "earbud-pairing",
+      "kind": "valid",
+      "relevant_source": "manuals/智能耳机使用与保修手册.md",
+      "rank": null,
+      "sources": [
+        "matrices/商品类目退换限制矩阵.md",
+        "policies/质量问题退换货政策.md",
+        "policies/质量问题退换货政策.md",
+        "policies/质量问题退换货政策.md",
+        "sop/退款申请处理流程.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "battery-safety",
+      "kind": "valid",
+      "relevant_source": "troubleshooting/充电与电源故障排查.md",
+      "rank": 1,
+      "sources": [
+        "troubleshooting/充电与电源故障排查.md",
+        "troubleshooting/充电与电源故障排查.md",
+        "troubleshooting/充电与电源故障排查.md",
+        "manuals/智能耳机使用与保修手册.md",
+        "troubleshooting/智能耳机故障排查.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "appliance-smoke",
+      "kind": "valid",
+      "relevant_source": "manuals/小家电安装与保养手册.md",
+      "rank": null,
+      "sources": [
+        "policies/七天无理由退货政策.md",
+        "policies/质量问题退换货政策.md",
+        "matrices/商品类目退换限制矩阵.md",
+        "policies/质量问题退换货政策.md",
+        "policies/质量问题退换货政策.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "member-rights",
+      "kind": "valid",
+      "relevant_source": "benefits/会员售后权益.md",
+      "rank": 1,
+      "sources": [
+        "benefits/会员售后权益.md",
+        "benefits/会员售后权益.md",
+        "risk/异常退款与凭证规则.md",
+        "benefits/企业客户服务权益.md",
+        "benefits/企业客户服务权益.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "enterprise-contract",
+      "kind": "valid",
+      "relevant_source": "benefits/企业客户服务权益.md",
+      "rank": null,
+      "sources": [
+        "matrices/售后赔付标准矩阵.md",
+        "sop/投诉升级与转人工流程.md",
+        "matrices/商品类目退换限制矩阵.md",
+        "matrices/售后赔付标准矩阵.md",
+        "sop/投诉升级与转人工流程.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "price-code",
+      "kind": "expired",
+      "relevant_source": "announcements/618价保活动公告.md",
+      "rank": null,
+      "sources": [
+        "policies/七天无理由退货政策.md",
+        "benefits/会员售后权益.md",
+        "matrices/商品类目退换限制矩阵.md",
+        "policies/七天无理由退货政策.md",
+        "policies/七天无理由退货政策.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "compensation",
+      "kind": "valid",
+      "relevant_source": "matrices/售后赔付标准矩阵.md",
+      "rank": 1,
+      "sources": [
+        "matrices/售后赔付标准矩阵.md",
+        "risk/异常退款与凭证规则.md",
+        "matrices/售后赔付标准矩阵.md",
+        "sop/投诉升级与转人工流程.md",
+        "policies/七天无理由退货政策.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "risk-evidence",
+      "kind": "valid",
+      "relevant_source": "risk/异常退款与凭证规则.md",
+      "rank": 1,
+      "sources": [
+        "risk/异常退款与凭证规则.md",
+        "sop/退款申请处理流程.md",
+        "risk/异常退款与凭证规则.md",
+        "sop/退款申请处理流程.md",
+        "sop/退款申请处理流程.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "security-secret",
+      "kind": "valid",
+      "relevant_source": "risk/账户与支付安全提醒.md",
+      "rank": 1,
+      "sources": [
+        "risk/账户与支付安全提醒.md",
+        "risk/账户与支付安全提醒.md",
+        "risk/账户与支付安全提醒.md",
+        "risk/异常退款与凭证规则.md",
+        "risk/异常退款与凭证规则.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "merchant-evidence",
+      "kind": "valid",
+      "relevant_source": "merchant/商家履约与举证规则.md",
+      "rank": 1,
+      "sources": [
+        "merchant/商家履约与举证规则.md",
+        "merchant/商家履约与举证规则.md",
+        "merchant/商家履约与举证规则.md",
+        "merchant/平台介入处理规则.md",
+        "sop/退款申请处理流程.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "p1-sla",
+      "kind": "valid",
+      "relevant_source": "sla/企业客户响应时效.md",
+      "rank": null,
+      "sources": [
+        "sop/投诉升级与转人工流程.md",
+        "sop/投诉升级与转人工流程.md",
+        "manuals/小家电安装与保养手册.md",
+        "sop/投诉升级与转人工流程.md",
+        "risk/异常退款与凭证规则.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    },
+    {
+      "id": "realtime-order",
+      "kind": "realtime",
+      "relevant_source": null,
+      "rank": null,
+      "sources": [],
+      "expired_source_exposed": false,
+      "realtime_skipped": true
+    },
+    {
+      "id": "no-grounding",
+      "kind": "no_evidence",
+      "relevant_source": null,
+      "rank": null,
+      "sources": [
+        "faq/订单与物流常见问题.md",
+        "sla/重大故障升级机制.md"
+      ],
+      "expired_source_exposed": false,
+      "realtime_skipped": false
+    }
+  ]
+}

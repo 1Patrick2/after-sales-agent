@@ -62,6 +62,7 @@ async def test_complex_request_uses_validated_llm_plan() -> None:
 
     assert response is not None
     assert plan is not None
+    assert plan.origin == "llm_generated"
     assert plan.steps[0].action_type == "tool"
     assert plan.steps[1].action_type == "confirm"
     assert plan.steps[1].requires_confirmation is True
@@ -276,6 +277,7 @@ def test_rule_plan_extracts_order_id_and_requires_confirmation() -> None:
     )
 
     assert plan is not None
+    assert plan.origin == "rule_fallback"
     assert plan.steps[0].arguments == {"order_id": "202607110001"}
     refund_step = plan.steps[-1]
     assert refund_step.action_type == "confirm"

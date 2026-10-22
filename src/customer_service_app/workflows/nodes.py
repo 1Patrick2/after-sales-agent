@@ -480,6 +480,7 @@ class CustomerServiceGraphNodes:
                         metadata={
                             "plan_id": plan.plan_id,
                             "step_count": len(plan.steps),
+                            "origin": plan.origin,
                         },
                     ),
                 )
@@ -488,7 +489,7 @@ class CustomerServiceGraphNodes:
                     stage="graph",
                     name="decide",
                     status="success",
-                    output={"mode": "plan", "step_count": len(plan.steps)},
+                    output={"mode": "plan", "step_count": len(plan.steps), "origin": plan.origin},
                 )
                 return Command(
                     update={

@@ -1,0 +1,1853 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-22T02:15:51.086508+00:00",
+    "git_head": "unavailable",
+    "seed": 20261021,
+    "model": "gpt-5.6-terra",
+    "embedding_provider": "ollama",
+    "retrieval_mode_configured": "hybrid",
+    "opensearch_enabled": false,
+    "security_enabled": false,
+    "graph_checkpointer": "postgres",
+    "base_url": "http://app:8000",
+    "concurrency": 1,
+    "timeout_seconds": 90.0,
+    "max_http_requests": 100,
+    "actual_http_requests": 65,
+    "note": "HTTP count is not upstream LLM call count; SDK/graph may retry."
+  },
+  "summary": {
+    "total_selected": 40,
+    "attempted": 34,
+    "pass": 22,
+    "fail": 2,
+    "needs_review": 10,
+    "not_run": 6,
+    "confirmed_success_rate": 0.6471,
+    "failure_types": {
+      "confirmation_not_created": 1,
+      "tool_selection_error": 1
+    },
+    "latency_ms": {
+      "request_count": 65,
+      "mean": 5204.77,
+      "p50": 3879.33,
+      "p95": 15947.52
+    }
+  },
+  "results": [
+    {
+      "case_id": "K01",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "七天无理由退货条件",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        6352.22
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "66e50c88-286b-4b91-95ab-d9cc37c304dd",
+          "thread_id": "ce0f34ca-fda0-4809-bfb2-ad33befcd964",
+          "conversation_id": "de53fd33-ba6a-4445-af0d-8e2baeb68f06",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "policies/七天无理由退货政策.md",
+            "policies/七天无理由退货政策.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "K02",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "质量问题举证",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        8964.78
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "4640de51-46f1-49d2-aa93-427e192154bb",
+          "thread_id": "28534cca-922e-48eb-bd8b-0ecd0aac4b16",
+          "conversation_id": "ebf935b7-bcf7-4f62-a42e-bc3e654f91bb",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "matrices/商品类目退换限制矩阵.md",
+            "policies/质量问题退换货政策.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "K03",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "退款到账周期",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        23570.79
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "ce95e47c-e751-40bd-ad3f-2cfad2255b38",
+          "thread_id": "24794f01-e3fe-4293-b5af-4d0ce25c1163",
+          "conversation_id": "58f62f47-c65b-4957-8825-9b2234b70fdd",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "faq/退款到账常见问题.md",
+            "faq/退款到账常见问题.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "K04",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "收货争议处理",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        6630.63
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "6c8c21a3-36b4-49c4-8c15-e914b2704730",
+          "thread_id": "ac3ae44b-58a9-444d-8090-bbf93eee8b99",
+          "conversation_id": "9d363bfa-2cfa-4f16-b378-e0472e9766d6",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "faq/订单与物流常见问题.md",
+            "sop/退款申请处理流程.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "K05",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "电池安全",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        7145.06
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "538ad9d2-87ee-44bb-8b5d-03b623db49ed",
+          "thread_id": "407bd202-9c30-4fca-b4b8-700915349428",
+          "conversation_id": "12900eb9-f6dc-48ae-8262-ce29a2c5d28b",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "troubleshooting/充电与电源故障排查.md",
+            "troubleshooting/充电与电源故障排查.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "K06",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "会员售后权益",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        26707.17
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "1309c56b-264c-4f89-a63f-010c3b2f3749",
+          "thread_id": "119716a1-b98f-4cc4-9893-e719cc28201e",
+          "conversation_id": "5a8d92c9-0ea0-4174-be0b-4ff12a6279d3",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "benefits/会员售后权益.md",
+            "benefits/会员售后权益.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "K07",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "退款流程",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        6066.23
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "19448816-6b1e-4ff8-bf0e-82a529ae7735",
+          "thread_id": "38adf7a8-0b82-4f9d-aaf7-fb174bb8ca7e",
+          "conversation_id": "91b75d77-c0a8-401d-bb10-86ee07a291ab",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "sop/退款申请处理流程.md",
+            "sop/退款申请处理流程.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "K08",
+      "category": "knowledge",
+      "mode": "chat",
+      "scenario": "支付凭证安全",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        6044.93
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "6541678e-79a0-413c-beae-b60cf4af36fa",
+          "thread_id": "65d9cb39-5d80-4fe7-ac1e-37b3b398ca01",
+          "conversation_id": "ad3ff346-76c3-4d81-9d65-b377945558b3",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [
+            "risk/账户与支付安全提醒.md",
+            "risk/账户与支付安全提醒.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "O01",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "查询已发货订单",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        5021.02
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "9e4229a0-bf63-4ccb-ad03-486d57015d05",
+          "thread_id": "c1bafe9f-1c43-4254-b911-6b0a695156aa",
+          "conversation_id": "cec2c126-2237-403a-90cb-168460c60b73",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "O02",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "查询物流状态",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        4762.97
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "b5f01a07-bf26-4f5a-aec4-d01dee938dce",
+          "thread_id": "379d7b3f-0fe7-4bc0-a35c-05c1f3192e7c",
+          "conversation_id": "19acd7b1-1594-4f07-a412-6edf46a73777",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_logistics_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_logistics_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "O03",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "订单状态与物流公司",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        4332.72
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "603d56b3-67a8-4c58-a03c-502e02acbdc3",
+          "thread_id": "0cb60de4-c023-4301-becc-a4c779050c16",
+          "conversation_id": "3eb035e3-25f0-47a6-9fc2-4357807b12d9",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "O04",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "订单物流单号",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        4290.21
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "3b502227-14f5-4252-9771-409266cf7e94",
+          "thread_id": "4d6f5c57-fe77-4a94-9ee0-9153e7096a95",
+          "conversation_id": "d34d0e0a-96f3-48c3-91db-932a3f447e7a",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_logistics_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_logistics_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "O05",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "重复只读查询",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        7753.85
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "88ac15f6-8d63-4117-897a-0dbb5ee4077d",
+          "thread_id": "942323c0-e015-4590-b6cc-69824530b05a",
+          "conversation_id": "a7ee6106-79ba-4ce7-a5a9-d88673b6a006",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "O06",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "订单查询不触发写入",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        5847.46
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "bd86c072-7ef0-43dc-a0e4-097f4548c659",
+          "thread_id": "58ec7462-7c78-470e-860b-5765df0457df",
+          "conversation_id": "a7f7fe49-d5ff-4488-a527-ec0ed8f995c8",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "O07",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "物流延误问询",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        6937.31
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "403f4a34-6015-4d76-9680-e072d9e6662d",
+          "thread_id": "3e5d8980-800a-43d4-8ab8-c7a75003d923",
+          "conversation_id": "46c1ffac-e9f9-4de7-b9b1-45e88c7ce359",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_logistics_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_logistics_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "O08",
+      "category": "orders",
+      "mode": "chat",
+      "scenario": "订单编号直接指定",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        7933.22
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "52edf810-b905-4354-b13f-9b7a58745fad",
+          "thread_id": "13050356-1bb5-4837-a1a3-9b895389dce8",
+          "conversation_id": "1e7d67fc-03c2-4ccb-9d34-8b16fb569b53",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "C01",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "同会话订单指代",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        8815.95,
+        9949.8
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "053887f0-d4bf-4843-acd2-eb4f14e92755",
+          "thread_id": "99998c3f-24d9-4cb6-94ec-c4c17b986274",
+          "conversation_id": "d7dab766-5fa5-47c7-af17-08e1b33f0bfb",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "cdffc7b6-b4f1-4e13-9e1a-f0bf85e4e47b",
+          "thread_id": "99998c3f-24d9-4cb6-94ec-c4c17b986274",
+          "conversation_id": "d7dab766-5fa5-47c7-af17-08e1b33f0bfb",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "C02",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "同会话物流指代",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        3879.33,
+        17105.5
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "6b6e1cf9-72cf-4659-a099-73d82de8f88f",
+          "thread_id": "7ad2f05d-2f4b-4544-bd39-2b9dda79c626",
+          "conversation_id": "7e91a2c9-7a9a-4d70-abb6-5a66c6b0c27b",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "afddd2c3-b5c6-48a5-b73b-7686cca40191",
+          "thread_id": "7ad2f05d-2f4b-4544-bd39-2b9dda79c626",
+          "conversation_id": "7e91a2c9-7a9a-4d70-abb6-5a66c6b0c27b",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_logistics_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_logistics_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "C03",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "同会话订单再确认",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        8114.49,
+        11315.6
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "bf7797c3-4435-4c12-ac18-4c7e018898ba",
+          "thread_id": "e9fd377b-6f4e-4f2f-bcc4-73d683d2e457",
+          "conversation_id": "e832982b-8f48-4b96-b63c-2f97825bb3ba",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status",
+            "query_logistics_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            },
+            {
+              "name": "query_logistics_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "5b6ade2d-af9d-4791-a7cd-2b2db8740daa",
+          "thread_id": "e9fd377b-6f4e-4f2f-bcc4-73d683d2e457",
+          "conversation_id": "e832982b-8f48-4b96-b63c-2f97825bb3ba",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "C04",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "同会话重复查询",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        8523.29,
+        8358.02
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "1ebc65d4-7fe8-4138-98b0-984dc3139dab",
+          "thread_id": "4acfdd46-1681-495f-8bb3-8f35bfb7ea9a",
+          "conversation_id": "908989f6-355e-49a1-8a81-20a11c9f5162",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "ee57d66f-4b9a-477c-a8a7-f01568445e12",
+          "thread_id": "4acfdd46-1681-495f-8bb3-8f35bfb7ea9a",
+          "conversation_id": "908989f6-355e-49a1-8a81-20a11c9f5162",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "plan_step",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "C05",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "指代物流单号",
+      "status": "fail",
+      "failure_type": "tool_selection_error",
+      "latencies_ms": [
+        9058.59,
+        33934.33
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "b5e221b6-4fae-4c61-8213-3583da8969d8",
+          "thread_id": "1d103098-0ad5-4ad2-8832-5a6e45e10043",
+          "conversation_id": "822b4728-3b84-48c0-acb8-3c4c6026aa82",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "c73dbe52-fa0c-48e9-bd81-4a03bec8dbf3",
+          "thread_id": "1d103098-0ad5-4ad2-8832-5a6e45e10043",
+          "conversation_id": "822b4728-3b84-48c0-acb8-3c4c6026aa82",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "C06",
+      "category": "conversation",
+      "mode": "chat",
+      "scenario": "无订单号不得编造",
+      "status": "needs_review",
+      "failure_type": "manual_semantic_review_pending",
+      "latencies_ms": [
+        2684.58,
+        3818.81
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "de02da84-9277-4af1-8bf5-25c156284c0b",
+          "thread_id": "2f9961a9-637e-498e-ac86-3c185ee6052c",
+          "conversation_id": "abe275db-be18-4c70-b09e-48041b548d83",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "ca36d167-2f03-4243-bd6a-32c509e986c0",
+          "thread_id": "2f9961a9-637e-498e-ac86-3c185ee6052c",
+          "conversation_id": "abe275db-be18-4c70-b09e-48041b548d83",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "R01",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "退款申请拒绝",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        2774.97,
+        7.98,
+        4.22,
+        40.01
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "24ecba2e-6392-4482-ada0-2d4ffbe85561",
+          "thread_id": "b4753c2c-5e04-4bd7-b7f5-6f9eeae6666a",
+          "conversation_id": "90ecfc66-1010-4209-b320-530a6a5907c7",
+          "confirmation_id": "43d4342d-aef0-4c25-99b4-88c97b7715fd",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "43d4342d-aef0-4c25-99b4-88c97b7715fd",
+      "thread_id": "b4753c2c-5e04-4bd7-b7f5-6f9eeae6666a",
+      "run_id": "24ecba2e-6392-4482-ada0-2d4ffbe85561",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "rejected",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "plan_step",
+        "confirmation",
+        "confirmation",
+        "persist"
+      ],
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "R02",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "退款申请批准",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        6729.86,
+        6.25,
+        4.93,
+        2027.95
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "86554fa5-5cec-4315-8e2d-08786a8019d6",
+          "thread_id": "8d789bef-bea2-424c-8376-a3738414f159",
+          "conversation_id": "29eb2206-2da6-4846-bf08-e1c8c0984bff",
+          "confirmation_id": "c4757e5e-aa75-48c6-83ac-ddf74ccecea2",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "c4757e5e-aa75-48c6-83ac-ddf74ccecea2",
+      "thread_id": "8d789bef-bea2-424c-8376-a3738414f159",
+      "run_id": "86554fa5-5cec-4315-8e2d-08786a8019d6",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "executed",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "plan_step",
+        "confirmation",
+        "confirmation",
+        "finalize",
+        "persist"
+      ],
+      "refund_tickets_after": 1
+    },
+    {
+      "case_id": "R03",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "拒绝后无工单",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        4007.76,
+        6.79,
+        4.08,
+        31.78
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "d82454cc-b4a3-4211-8dbb-c604d8b7d3cd",
+          "thread_id": "b19adbef-93ee-439b-9ddf-e07e599dc2fc",
+          "conversation_id": "3ca66a51-5e29-454f-b39a-7ac20839e886",
+          "confirmation_id": "0826c789-a89f-45fe-a086-9a246697d494",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "0826c789-a89f-45fe-a086-9a246697d494",
+      "thread_id": "b19adbef-93ee-439b-9ddf-e07e599dc2fc",
+      "run_id": "d82454cc-b4a3-4211-8dbb-c604d8b7d3cd",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "rejected",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "plan_step",
+        "confirmation",
+        "confirmation",
+        "persist"
+      ],
+      "refund_tickets_after": 0
+    },
+    {
+      "case_id": "R04",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "批准后重复提交",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        3315.88,
+        6.08,
+        3.67,
+        2472.24,
+        5.96
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "e3083371-6046-4d3a-ba87-efc5b6fcd37d",
+          "thread_id": "adc135c1-70cc-4396-bffe-df50c989b7a2",
+          "conversation_id": "9e4fbc8a-4e41-41d8-ac97-5c84aa321f95",
+          "confirmation_id": "6f2c38c8-539e-4149-98ce-c47fd0cb8a8b",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "6f2c38c8-539e-4149-98ce-c47fd0cb8a8b",
+      "thread_id": "adc135c1-70cc-4396-bffe-df50c989b7a2",
+      "run_id": "e3083371-6046-4d3a-ba87-efc5b6fcd37d",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "executed",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "plan_step",
+        "confirmation",
+        "confirmation",
+        "finalize",
+        "persist"
+      ],
+      "refund_tickets_after": 1,
+      "repeat_decision_http_status": 409,
+      "refund_tickets_after_repeat": 1
+    },
+    {
+      "case_id": "R05",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "退款询问与明确提交",
+      "status": "fail",
+      "failure_type": "confirmation_not_created",
+      "latencies_ms": [
+        9416.99,
+        3484.09
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "e46e51b6-d64d-4f53-b739-b3c804876a6c",
+          "thread_id": "16c2bf3e-e360-4607-a79f-69deb0125c99",
+          "conversation_id": "2f077ed8-bac9-4674-86bd-63831071cd53",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [
+            "sop/退款申请处理流程.md",
+            "sop/退款申请处理流程.md"
+          ],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "needs_clarification",
+          "run_id": "8def92fe-d28d-4de0-8204-1972910e206a",
+          "thread_id": "16c2bf3e-e360-4607-a79f-69deb0125c99",
+          "conversation_id": "2f077ed8-bac9-4674-86bd-63831071cd53",
+          "confirmation_id": null,
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "clarify",
+            "persist"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": null,
+      "thread_id": "16c2bf3e-e360-4607-a79f-69deb0125c99",
+      "run_id": "8def92fe-d28d-4de0-8204-1972910e206a"
+    },
+    {
+      "case_id": "R06",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "多轮退款批准",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        8994.2,
+        9711.09,
+        5.99,
+        3.79,
+        2891.2
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "a8e8f500-cd4e-453c-a3eb-0bdb8e8ddc81",
+          "thread_id": "032b5670-48c9-473c-bbc9-c9938fcf6ff4",
+          "conversation_id": "45d82926-efbd-4034-9643-239005b8e49f",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status",
+            "query_logistics_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            },
+            {
+              "name": "query_logistics_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "df64e29d-0c3e-45c1-ba77-5ca31894ff64",
+          "thread_id": "032b5670-48c9-473c-bbc9-c9938fcf6ff4",
+          "conversation_id": "45d82926-efbd-4034-9643-239005b8e49f",
+          "confirmation_id": "c0da5059-36e5-4af3-8bc8-8185ea96b747",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "c0da5059-36e5-4af3-8bc8-8185ea96b747",
+      "thread_id": "032b5670-48c9-473c-bbc9-c9938fcf6ff4",
+      "run_id": "df64e29d-0c3e-45c1-ba77-5ca31894ff64",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "executed",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "confirmation",
+        "confirmation",
+        "finalize",
+        "persist"
+      ],
+      "refund_tickets_after": 1
+    },
+    {
+      "case_id": "R07",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "退款拒绝重复操作",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        2513.37,
+        6.19,
+        3.98,
+        31.77,
+        6.76
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "3f65065d-2970-4dc0-86e2-32ac4acadbcf",
+          "thread_id": "8aca2200-7bd8-451a-979d-96d1c2d3da7d",
+          "conversation_id": "a2d4d742-7a58-4679-a074-7bb5057577e6",
+          "confirmation_id": "003d8087-1733-4a23-b81e-ba7b2aa75f9b",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "003d8087-1733-4a23-b81e-ba7b2aa75f9b",
+      "thread_id": "8aca2200-7bd8-451a-979d-96d1c2d3da7d",
+      "run_id": "3f65065d-2970-4dc0-86e2-32ac4acadbcf",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "rejected",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "plan_step",
+        "confirmation",
+        "confirmation",
+        "persist"
+      ],
+      "refund_tickets_after": 0,
+      "repeat_decision_http_status": 409,
+      "refund_tickets_after_repeat": 0
+    },
+    {
+      "case_id": "R08",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "退款批准结果可追溯",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        4523.31,
+        7.32,
+        3.64,
+        3005.09
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "9215b212-d0ac-4fff-8c24-1d82e1c82104",
+          "thread_id": "b33eedda-9dc7-4b22-8986-1325d30ccd3e",
+          "conversation_id": "b59a2c24-6aea-4d09-b24c-9e8380aca00f",
+          "confirmation_id": "fc31c117-ad3f-4a9a-bab2-62e774b68e09",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "fc31c117-ad3f-4a9a-bab2-62e774b68e09",
+      "thread_id": "b33eedda-9dc7-4b22-8986-1325d30ccd3e",
+      "run_id": "9215b212-d0ac-4fff-8c24-1d82e1c82104",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "executed",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "plan_step",
+        "confirmation",
+        "confirmation",
+        "finalize",
+        "persist"
+      ],
+      "refund_tickets_after": 1
+    },
+    {
+      "case_id": "I01",
+      "category": "isolation",
+      "mode": "auth_live",
+      "scenario": "无令牌拒绝确认单访问",
+      "status": "not_run",
+      "failure_type": "requires_isolated_security_or_mock_harness",
+      "latencies_ms": [],
+      "responses": []
+    },
+    {
+      "case_id": "I02",
+      "category": "isolation",
+      "mode": "auth_live",
+      "scenario": "跨用户订单查不到",
+      "status": "not_run",
+      "failure_type": "requires_isolated_security_or_mock_harness",
+      "latencies_ms": [],
+      "responses": []
+    },
+    {
+      "case_id": "I03",
+      "category": "isolation",
+      "mode": "auth_live",
+      "scenario": "跨租户身份拒绝",
+      "status": "not_run",
+      "failure_type": "requires_isolated_security_or_mock_harness",
+      "latencies_ms": [],
+      "responses": []
+    },
+    {
+      "case_id": "I04",
+      "category": "isolation",
+      "mode": "auth_live",
+      "scenario": "模型工具参数不能伪造身份",
+      "status": "not_run",
+      "failure_type": "requires_isolated_security_or_mock_harness",
+      "latencies_ms": [],
+      "responses": []
+    },
+    {
+      "case_id": "F01",
+      "category": "fault",
+      "mode": "http_negative",
+      "scenario": "空问题参数校验",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        3.93
+      ],
+      "responses": [],
+      "http_status": 422,
+      "error_code": null
+    },
+    {
+      "case_id": "F02",
+      "category": "fault",
+      "mode": "http_negative",
+      "scenario": "缺少用户身份参数",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        3.36
+      ],
+      "responses": [],
+      "http_status": 422,
+      "error_code": null
+    },
+    {
+      "case_id": "F03",
+      "category": "fault",
+      "mode": "chat",
+      "scenario": "不存在的合成订单不能编造",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        8319.5
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "c46c3c0a-8791-48f8-9bcc-e49883da6dcd",
+          "thread_id": "4a631cb7-df19-4fb8-9e56-0c6c12dd062b",
+          "conversation_id": "a4258d53-b6f6-4f51-8190-15b5f6762736",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "F04",
+      "category": "fault",
+      "mode": "http_negative",
+      "scenario": "不存在确认单返回404",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        5.33
+      ],
+      "responses": [],
+      "http_status": 404,
+      "error_code": "confirmation_not_found"
+    },
+    {
+      "case_id": "F05",
+      "category": "fault",
+      "mode": "mock_fault",
+      "scenario": "LLM失效时受控回退",
+      "status": "not_run",
+      "failure_type": "requires_isolated_security_or_mock_harness",
+      "latencies_ms": [],
+      "responses": []
+    },
+    {
+      "case_id": "F06",
+      "category": "fault",
+      "mode": "mock_fault",
+      "scenario": "工具超时不重复写入",
+      "status": "not_run",
+      "failure_type": "requires_isolated_security_or_mock_harness",
+      "latencies_ms": [],
+      "responses": []
+    }
+  ]
+}

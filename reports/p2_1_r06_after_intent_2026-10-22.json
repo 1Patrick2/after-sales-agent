@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-22T02:09:19.830716+00:00",
+    "git_head": "unavailable",
+    "seed": 20261021,
+    "model": "gpt-5.6-terra",
+    "embedding_provider": "ollama",
+    "retrieval_mode_configured": "hybrid",
+    "opensearch_enabled": false,
+    "security_enabled": false,
+    "graph_checkpointer": "postgres",
+    "base_url": "http://app:8000",
+    "concurrency": 1,
+    "timeout_seconds": 90.0,
+    "max_http_requests": 5,
+    "actual_http_requests": 5,
+    "note": "HTTP count is not upstream LLM call count; SDK/graph may retry."
+  },
+  "summary": {
+    "total_selected": 1,
+    "attempted": 1,
+    "pass": 1,
+    "fail": 0,
+    "needs_review": 0,
+    "not_run": 0,
+    "confirmed_success_rate": 1.0,
+    "failure_types": {},
+    "latency_ms": {
+      "request_count": 5,
+      "mean": 3978.84,
+      "p50": 2788.45,
+      "p95": 9125.8
+    }
+  },
+  "results": [
+    {
+      "case_id": "R06",
+      "category": "refund",
+      "mode": "refund",
+      "scenario": "多轮退款批准",
+      "status": "pass",
+      "failure_type": "",
+      "latencies_ms": [
+        9520.11,
+        7548.57,
+        23.12,
+        13.95,
+        2788.45
+      ],
+      "responses": [
+        {
+          "http_status": 200,
+          "status": "completed",
+          "run_id": "4880b039-f1a6-4f90-9551-c5cb13fbdcc7",
+          "thread_id": "661ccb40-4695-40b5-a761-9620a4dd334e",
+          "conversation_id": "554c837b-9a4c-4746-b520-baa5074412f9",
+          "confirmation_id": null,
+          "tool_calls": [
+            "query_order_status"
+          ],
+          "tool_results": [
+            {
+              "name": "query_order_status",
+              "ok": true
+            }
+          ],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "llm_decision",
+            "tool",
+            "finalize",
+            "persist"
+          ]
+        },
+        {
+          "http_status": 200,
+          "status": "waiting_confirmation",
+          "run_id": "c64f9b91-abe3-4554-9da3-ab3fc6cc1f0a",
+          "thread_id": "661ccb40-4695-40b5-a761-9620a4dd334e",
+          "conversation_id": "554c837b-9a4c-4746-b520-baa5074412f9",
+          "confirmation_id": "f6eb2d7d-b4a4-4fd9-8674-d3d50ef0097a",
+          "tool_calls": [],
+          "tool_results": [],
+          "sources": [],
+          "trace_stages": [
+            "conversation",
+            "cost",
+            "memory",
+            "rewrite",
+            "rag",
+            "retrieval_quality",
+            "plan",
+            "plan_step",
+            "confirmation"
+          ]
+        }
+      ],
+      "refund_tickets_before": 0,
+      "confirmation_id": "f6eb2d7d-b4a4-4fd9-8674-d3d50ef0097a",
+      "thread_id": "661ccb40-4695-40b5-a761-9620a4dd334e",
+      "run_id": "c64f9b91-abe3-4554-9da3-ab3fc6cc1f0a",
+      "refund_tickets_pending": 0,
+      "checkpoint": {
+        "http_status": 200,
+        "status": "waiting_confirmation",
+        "next_nodes": [
+          "await_confirmation"
+        ],
+        "task_names": [
+          "await_confirmation"
+        ]
+      },
+      "decision_http_status": 200,
+      "decision_status": "executed",
+      "decision_trace_stages": [
+        "conversation",
+        "cost",
+        "memory",
+        "rewrite",
+        "rag",
+        "retrieval_quality",
+        "plan",
+        "plan_step",
+        "confirmation",
+        "confirmation",
+        "finalize",
+        "persist"
+      ],
+      "refund_tickets_after": 1
+    }
+  ]
+}

@@ -197,6 +197,9 @@ class PlannerService:
                     conversation_id=conversation_id,
                     resolved_question=goal,
                 )
+                plan = plan.model_copy(
+                    update={"origin": "llm_generated" if attempt == 0 else "llm_repaired"}
+                )
                 response.prompt_tokens = prompt_tokens
                 response.completion_tokens = completion_tokens
                 response.total_tokens = total_tokens
@@ -471,6 +474,7 @@ class PlannerService:
             plan_id=str(uuid.uuid4()),
             conversation_id=conversation_id,
             user_goal=question,
+            origin="rule_fallback",
             steps=steps[: self._max_steps],
             max_steps=self._max_steps,
         )

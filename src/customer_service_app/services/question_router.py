@@ -16,7 +16,10 @@ class QuestionRouter:
     )
     _condition_words = ("如果", "然后", "同时", "再", "并且", "否则")
     _realtime_words = ("订单状态", "物流到哪", "快递到哪", "退款进度", "工单进度")
-    _policy_words = ("规则", "政策", "条件", "期限", "是否可以", "怎么处理", "流程")
+    _policy_words = (
+        "规则", "政策", "条件", "期限", "是否可以", "怎么处理", "流程",
+        "步骤", "需要哪些",
+    )
     _business_domains = (
         "订单",
         "物流",
@@ -59,7 +62,8 @@ class QuestionRouter:
         if not value:
             return RouteDecision(reason="empty_question")
 
-        policy = self._is_policy(value, rewrite)
+        # 改写可扩展检索词，但不能丢弃原问题的政策/凭证意图。
+        policy = self._is_policy(value, rewrite) or self._is_policy(question, rewrite)
         realtime = self._is_realtime(value, policy=policy)
         source: RouteSource
         if realtime and policy:
@@ -69,7 +73,10 @@ class QuestionRouter:
         else:
             source = "knowledge"
 
-        needs_plan = planner_enabled and self._should_plan_question(value)
+        # 改写可以补充可信实体，但不能把原始的写操作指令降格为政策咨询。
+        needs_plan = planner_enabled and (
+            self._should_plan_question(question) or self._should_plan_question(value)
+        )
         execution_mode: ExecutionMode
         if needs_plan:
             execution_mode = "planner"
@@ -93,18 +100,21 @@ class QuestionRouter:
         """零 Token 复杂度门禁，供 Planner 和主路由共同使用。"""
 
         question = (resolved_question or request.question).strip()
-        return self._should_plan_question(question)
+        return self._should_plan_question(request.question) or self._should_plan_question(question)
 
     def _should_plan_question(self, question: str) -> bool:
         """按纯文本判断复杂度，避免把改写后的长上下文重新校验成请求 DTO。"""
 
         if not question:
             return False
-        if any(word in question for word in self._condition_words):
+        if self._is_refund_submission(question):
             return True
-        if self._contains_any(question, ("提交退款申请", "申请退款", "创建退款工单")) and not self._contains_any(
-            question, ("如何", "怎么", "流程", "条件", "步骤")
+        if self._contains_any(
+            question,
+            ("如何", "怎么", "步骤", "多久", "几天", "需要哪些", "是什么", "了解政策"),
         ):
+            return False
+        if any(word in question for word in self._condition_words):
             return True
 
         intents = 0
@@ -130,6 +140,29 @@ class QuestionRouter:
             or len(order_ids) >= 2
         )
 
+    @staticmethod
+    def _is_refund_submission(question: str) -> bool:
+        if "退款" not in question:
+            return False
+        if re.search(r"(?:不要|暂不|无需|不用).{0,4}(?:提交|发起|创建|申请)退款", question):
+            return False
+        requested_action = (
+            "申请退款" in question
+            or "创建退款工单" in question
+            or (
+                "退款申请" in question
+                and any(verb in question for verb in ("提交", "发起", "创建", "办理"))
+            )
+        )
+        if not requested_action:
+            return False
+        is_question = any(word in question for word in ("如何", "怎么", "步骤", "多久", "几天", "需要哪些", "是否", "吗？", "吗?"))
+        is_imperative = any(
+            word in question
+            for word in ("请为", "请提交", "请发起", "请创建", "请帮我", "帮我", "我要", "我确认要", "麻烦")
+        )
+        return not is_question or is_imperative
+
     def _is_realtime(self, value: str, *, policy: bool) -> bool:
         if any(word in value for word in self._realtime_words):
             return True
@@ -149,7 +182,11 @@ class QuestionRouter:
             intent = rewrite.intent.lower()
             if "policy" in intent or "faq" in intent:
                 return True
-        return any(word in value for word in self._policy_words)
+        return any(word in value for word in self._policy_words) or (
+            "如何" in value and not self._business_id_pattern.search(value)
+        ) or (
+            "退款" in value and ("到账" in value or "多久" in value)
+        )
 
     def _document_types(self, value: str, *, source: RouteSource, policy: bool) -> list[str]:
         if source == "realtime_tool" and not policy:
